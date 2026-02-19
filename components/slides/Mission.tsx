@@ -9,21 +9,22 @@ const Mission: React.FC = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
-        <span className="text-brand-mink font-mono text-xs uppercase tracking-widest mb-6 block">OUR CORE</span>
+        <span className="text-brand-mink font-mono text-xs uppercase tracking-widest mb-6 block">OUR MISSION</span>
         
         <h2 className="text-3xl md:text-5xl font-display text-white uppercase leading-tight mb-12">
-          "Make Golf is built on a single, brutal truth: <span className="text-brand-mink">modern golf gear is a lie.</span>"
+          The industry isn't broken. <br/>
+          <span className="text-brand-mink">It's just limited by molds.</span>
         </h2>
 
         <div className="border-l-2 border-brand-mink pl-8 space-y-6">
           <p className="text-xl text-brand-polar/80 font-light leading-relaxed">
-            We don’t do gimmicks, stock club heads, or guesswork. We analyse your swing data, and we 3D print clubs that fit <span className="text-white font-medium">you</span>.
+            For decades, manufacturers have done their best to fit millions of unique swings into three or four standard "buckets." It was the only way to scale.
           </p>
           <p className="text-xl text-brand-polar/80 font-light leading-relaxed">
-            Not mass-produced. Not “close enough.” <span className="text-white font-medium">You.</span>
+            But technology has moved on. We don't need to guess anymore. We analyse your swing data, and we 3D print clubs that fit <span className="text-white font-medium">you</span>.
           </p>
           <p className="text-xl text-brand-polar/80 font-light leading-relaxed">
-            No noise. No hiding. Just you, the result, and golf the way it should be played.
+            No stock inventory. No compromises. Just golf the way it should be played.
           </p>
         </div>
       </motion.div>

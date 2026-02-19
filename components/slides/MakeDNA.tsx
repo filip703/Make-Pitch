@@ -1,19 +1,55 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Network, ArrowRight, CheckCircle, Database, Play, X, ExternalLink } from 'lucide-react';
+import { Network, ArrowRight, CheckCircle, Database, Play, X, ExternalLink, Scan, Cpu, Box, FileCode } from 'lucide-react';
 
 const MakeDNA: React.FC = () => {
   const [showLiveDemo, setShowLiveDemo] = useState(false);
   const DASHBOARD_URL = "https://frontend-seven-iota-56.vercel.app/dashboard";
 
+  const steps = [
+      {
+          id: 1,
+          icon: Scan,
+          title: "1. Capture",
+          subtitle: "Raw Signal",
+          desc: "We ingest data from any standard launch monitor (Trackman, Quad, Flightscope). No new hardware required for fitters.",
+          color: "text-brand-blue"
+      },
+      {
+          id: 2,
+          icon: Network,
+          title: "2. Generate",
+          subtitle: "Parametric Logic",
+          desc: "Our AI engine processes the biometrics and adjusts 14 active parameters (CoG, Offset, Sole, Inertia) to neutralize miss-patterns.",
+          color: "text-brand-mink"
+      },
+      {
+          id: 3,
+          icon: Box,
+          title: "3. Digital Twin",
+          subtitle: "Verification",
+          desc: "The system simulates mass properties and physics before a single atom is printed. Ensuring performance matches intent.",
+          color: "text-brand-amber"
+      },
+      {
+          id: 4,
+          icon: FileCode,
+          title: "4. Production",
+          subtitle: "Manufacturing",
+          desc: "A validated STEP file is sent directly to our printing partners. 17-4PH Steel. 48h turnaround.",
+          color: "text-brand-green"
+      }
+  ];
+
   return (
-    <div className="w-full max-w-6xl h-full flex flex-col">
+    <div className="w-full max-w-7xl h-full flex flex-col">
       
       {/* Header Area */}
-      <div className="flex justify-between items-end mb-8 shrink-0">
+      <div className="flex justify-between items-end mb-12 shrink-0">
         <div>
            <span className="text-brand-mink font-mono text-xs uppercase tracking-widest mb-2 block">PROPRIETARY TECHNOLOGY</span>
-           <h2 className="text-4xl md:text-5xl font-display text-white uppercase">The Brain: MAKE DNA</h2>
+           <h2 className="text-4xl md:text-5xl font-display text-white uppercase">The Process: MAKE DNA</h2>
+           <p className="text-brand-polar/50 font-mono text-xs mt-2">FROM DATA TO MATTER IN 4 STEPS</p>
         </div>
         
         {/* Toggle Button */}
@@ -57,78 +93,49 @@ const MakeDNA: React.FC = () => {
                />
             </motion.div>
           ) : (
-            /* STATIC SCHEMATIC VIEW */
+            /* 4-STEP STATIC VIEW */
             <motion.div 
               key="static"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col md:flex-row gap-8 items-stretch h-full"
+              className="grid grid-cols-1 md:grid-cols-4 gap-6 h-full"
             >
-                {/* LEFT: INPUT */}
-                <motion.div 
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="w-full md:w-1/4 bg-brand-surface border border-white/5 rounded-xl p-6 flex flex-col justify-between"
-                >
-                   <div>
-                      <Database className="w-8 h-8 text-brand-blue mb-4" />
-                      <h3 className="text-xl font-display text-white mb-2">1. Input Data</h3>
-                      <ul className="text-xs font-mono text-brand-polar/60 space-y-2">
-                         <li>• Trackman Launch Data</li>
-                         <li>• Biometrics</li>
-                         <li>• Impact Location</li>
-                         <li>• Player Preference</li>
-                      </ul>
-                   </div>
-                   <div className="text-[10px] text-brand-polar/30 font-mono mt-4">RAW JSON STREAM</div>
-                </motion.div>
+                {steps.map((step, idx) => (
+                    <motion.div
+                        key={step.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.15 }}
+                        className="bg-brand-surface border border-white/5 p-6 rounded-xl flex flex-col relative group hover:border-brand-mink/30 transition-colors"
+                    >
+                        {/* Connecting Arrow (Desktop only, not on last item) */}
+                        {idx < 3 && (
+                            <div className="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-white/10">
+                                <ArrowRight className="w-6 h-6" />
+                            </div>
+                        )}
 
-                {/* MIDDLE: THE ENGINE */}
-                <motion.div 
-                   initial={{ opacity: 0, scale: 0.9 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   transition={{ delay: 0.2 }}
-                   className="w-full md:w-1/2 bg-brand-black border border-brand-mink/30 rounded-xl p-8 relative overflow-hidden flex flex-col justify-center items-center shadow-[0_0_50px_rgba(255,34,76,0.15)]"
-                >
-                   <div className="absolute inset-0 bg-grid opacity-20"></div>
-                   <div className="w-32 h-32 rounded-full border-2 border-brand-mink flex items-center justify-center mb-6 relative z-10 bg-brand-black">
-                      <Network className="w-16 h-16 text-brand-mink" />
-                   </div>
-                   <h3 className="text-3xl font-display text-white mb-2 relative z-10">AI Optimization</h3>
-                   <p className="text-center text-sm text-brand-polar/70 max-w-xs relative z-10 mb-6">
-                      Our algorithm adjusts Center of Gravity (CoG), MOI, Offset, and Sole Geometry to neutralize the player's specific miss-pattern.
-                   </p>
-                   
-                   <div className="flex gap-4 relative z-10">
-                      <div className="bg-brand-green/10 text-brand-green px-3 py-1 rounded text-[10px] font-mono border border-brand-green/20 flex items-center gap-2">
-                         <CheckCircle className="w-3 h-3" /> Physics Check
-                      </div>
-                      <div className="bg-brand-green/10 text-brand-green px-3 py-1 rounded text-[10px] font-mono border border-brand-green/20 flex items-center gap-2">
-                         <CheckCircle className="w-3 h-3" /> R&A Compliant
-                      </div>
-                   </div>
-                </motion.div>
+                        <div className={`w-12 h-12 rounded-lg bg-brand-black flex items-center justify-center mb-6 ${step.color} border border-white/5`}>
+                            <step.icon className="w-6 h-6" />
+                        </div>
 
-                {/* RIGHT: OUTPUT */}
-                <motion.div 
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="w-full md:w-1/4 bg-brand-surface border border-white/5 rounded-xl p-6 flex flex-col justify-between"
-                >
-                   <div>
-                      <ArrowRight className="w-8 h-8 text-brand-green mb-4" />
-                      <h3 className="text-xl font-display text-white mb-2">3. Production</h3>
-                      <ul className="text-xs font-mono text-brand-polar/60 space-y-2">
-                         <li>• STEP/CAD File</li>
-                         <li>• Lattice Generation</li>
-                         <li>• Printer Instructions</li>
-                         <li>• QC Parameters</li>
-                      </ul>
-                   </div>
-                   <div className="text-[10px] text-brand-polar/30 font-mono mt-4">READY TO PRINT</div>
-                </motion.div>
+                        <div className="flex-grow">
+                            <h3 className="text-xl font-display font-bold text-white mb-1">{step.title}</h3>
+                            <div className="text-[10px] font-mono text-brand-polar/40 uppercase tracking-widest mb-4">{step.subtitle}</div>
+                            <p className="text-xs text-brand-polar/60 leading-relaxed font-mono">
+                                {step.desc}
+                            </p>
+                        </div>
+
+                        <div className="mt-6 pt-4 border-t border-white/5">
+                            <div className="flex items-center gap-2">
+                                <div className={`w-1.5 h-1.5 rounded-full ${step.color.replace('text-', 'bg-')}`}></div>
+                                <span className="text-[9px] text-white/30 uppercase tracking-wider">Status: Ready</span>
+                            </div>
+                        </div>
+                    </motion.div>
+                ))}
             </motion.div>
           )}
         </AnimatePresence>

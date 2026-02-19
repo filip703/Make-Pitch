@@ -57,9 +57,14 @@ const App: React.FC = () => {
   
   const [contextData, setContextData] = useState<SlideContextData>({
     investorName: '',
+    partnerWebsite: '',
+    partnerLogo: null,
     meetingPurpose: '',
     valuation: '25 MSEK',
-    askAmount: '3-5 MSEK'
+    askAmount: '3-5 MSEK',
+    burnRate: '450k SEK',
+    runway: '8 Months',
+    contactEmail: ''
   });
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -136,6 +141,7 @@ const App: React.FC = () => {
       exitPresentation={() => setMode('setup')}
       title={activeSlides[currentSlideIndex].title}
       investorName={contextData.investorName}
+      partnerLogo={contextData.partnerLogo}
     >
       <CurrentSlideComponent context={contextData} />
     </SlideLayout>

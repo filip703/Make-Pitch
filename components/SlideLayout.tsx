@@ -11,6 +11,7 @@ interface SlideLayoutProps {
   exitPresentation: () => void;
   title?: string;
   investorName?: string;
+  partnerLogo?: string | null;
 }
 
 const SlideLayout: React.FC<SlideLayoutProps> = ({ 
@@ -21,28 +22,39 @@ const SlideLayout: React.FC<SlideLayoutProps> = ({
   prevSlide,
   exitPresentation,
   title,
-  investorName
+  investorName,
+  partnerLogo
 }) => {
   
   const progress = ((currentSlide + 1) / totalSlides) * 100;
 
   return (
-    <div className="relative h-screen w-full bg-brand-black text-brand-polar overflow-hidden flex flex-col">
+    <div className="relative h-screen w-full bg-brand-black text-brand-polar overflow-hidden flex flex-col print:overflow-visible print:h-auto">
       {/* Background Grid */}
-      <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none print:hidden"></div>
 
       {/* Top Bar */}
-      <header className="absolute top-0 left-0 w-full p-6 z-50 flex justify-between items-center border-b border-white/5 bg-brand-black/50 backdrop-blur-sm">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={exitPresentation}>
+      <header className="absolute top-0 left-0 w-full p-6 z-50 flex justify-between items-center border-b border-white/5 bg-brand-black/50 backdrop-blur-sm print:hidden">
+        <div className="flex items-center gap-4 cursor-pointer" onClick={exitPresentation}>
           <img 
             src="https://clfejcuoqvcoelxjcuax.supabase.co/storage/v1/object/public/Brand%20filer/Logo/MAKE_ICONxWORDMARK_MINK.png" 
             alt="MAKE GOLF" 
-            className="h-8 object-contain"
+            className="h-6 md:h-8 object-contain"
           />
+          {partnerLogo && (
+            <>
+              <div className="h-6 w-px bg-white/20"></div>
+              <img 
+                src={partnerLogo} 
+                alt="Partner" 
+                className="h-6 md:h-8 object-contain opacity-80 filter grayscale hover:grayscale-0 transition-all"
+              />
+            </>
+          )}
         </div>
         
         {investorName && (
-          <div className="flex items-center gap-2 bg-white/5 px-3 py-1 rounded-full border border-white/10">
+          <div className="hidden md:flex items-center gap-2 bg-white/5 px-3 py-1 rounded-full border border-white/10">
             <div className="w-1.5 h-1.5 bg-brand-mink rounded-full animate-pulse"></div>
             <span className="text-[10px] font-mono uppercase tracking-widest text-white/60">Prepared for {investorName}</span>
           </div>
@@ -59,14 +71,14 @@ const SlideLayout: React.FC<SlideLayoutProps> = ({
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-grow relative z-10 flex items-center justify-center p-6 md:p-12">
+      <main className="flex-grow relative z-10 flex items-center justify-center p-6 md:p-12 print:p-0 print:block">
         <AnimatePresence mode="wait">
           {children}
         </AnimatePresence>
       </main>
 
       {/* Bottom Bar / Navigation */}
-      <footer className="absolute bottom-0 left-0 w-full z-50 bg-brand-black border-t border-white/5">
+      <footer className="absolute bottom-0 left-0 w-full z-50 bg-brand-black border-t border-white/5 print:hidden">
         {/* Progress Bar */}
         <div className="w-full h-1 bg-white/5">
           <motion.div 

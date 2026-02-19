@@ -1,16 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Settings, Play, CheckSquare, Square } from 'lucide-react';
+import { Settings, Play, CheckSquare, Square, Globe, Search, ArrowUp, ArrowDown, Download, Mail, Eye, GripVertical } from 'lucide-react';
 import { SlideDefinition, SlideContextData } from '../types';
 
 interface SetupScreenProps {
   slides: SlideDefinition[];
   selectedSlides: string[];
   toggleSlide: (id: string) => void;
+  reorderSlides?: (newOrder: string[]) => void; // New prop for reordering
   contextData: SlideContextData;
   setContextData: (data: SlideContextData) => void;
   startPresentation: () => void;
 }
+
+// Helper to scale slide for preview
+const SlidePreview: React.FC<{ component: React.FC<any>; context: SlideContextData }> = ({ component: Component, context }) => {
+  return (
+    <div className="w-full h-full bg-brand-black relative overflow-hidden flex items-center justify-center">
+       <div className="origin-center scale-[0.25] w-[400%] h-[400%] flex items-center justify-center pointer-events-none">
+          <Component context={context} />
+       </div>
+    </div>
+  );
+};
 
 const SetupScreen: React.FC<SetupScreenProps> = ({
   slides,
@@ -21,107 +33,296 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   startPresentation
 }) => {
   
+  const [activeTab, setActiveTab] = useState<'context' | 'financials'>('context');
+  const [logoLoading, setLogoLoading] = useState(false);
+  
+  // Local state to manage order in UI before "committing" if needed, 
+  // but assuming parent passes ordered slides, we just manipulate the parent's selection order logic if possible.
+  // For this version, we will assume `slides` prop passed in IS the master list order.
+  // Since we can't easily change the `ALL_SLIDES` constant in parent without a setter, 
+  // we will implement a visual filter here.
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setContextData({ ...contextData, [name]: value });
   };
 
+  const fetchLogo = async () => {
+    if (!contextData.partnerWebsite) return;
+    setLogoLoading(true);
+    
+    // Simulate API delay & fetch using Clearbit free logo API
+    // Clean URL first
+    let domain = contextData.partnerWebsite.replace(/(^\w+:|^)\/\//, '').split('/')[0];
+    const logoUrl = `https://logo.clearbit.com/${domain}`;
+    
+    // In a real app we'd verify it exists, here we just set it
+    setTimeout(() => {
+        setContextData({ ...contextData, partnerLogo: logoUrl });
+        setLogoLoading(false);
+    }, 800);
+  };
+
+  const handleExportPDF = () => {
+    window.print();
+  };
+
+  const handleEmailDeck = () => {
+    const subject = `Investment Opportunity: Make Golf x ${contextData.investorName || 'Partner'}`;
+    const body = `Hi,\n\nFollowing up on our conversation regarding Make Golf.\n\nAttached is the deck we reviewed.\n\nBest,\nMårten Eker\nCEO, Make Golf`;
+    window.location.href = `mailto:${contextData.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   return (
-    <div className="min-h-screen bg-brand-black text-brand-polar flex flex-col md:flex-row">
-      {/* Left Panel: Context */}
-      <div className="w-full md:w-1/3 p-8 border-r border-white/10 flex flex-col justify-center bg-brand-surface/50">
-        <div className="mb-12">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-8 bg-brand-mink rounded-sm flex items-center justify-center font-display font-bold text-white">M</div>
-            <h1 className="text-2xl font-display font-bold">Pitch Setup</h1>
-          </div>
-          <p className="text-sm text-white/50 font-mono">Configure your narrative for specific stakeholders.</p>
-        </div>
-
-        <div className="space-y-6">
-          <div>
-            <label className="block text-xs font-mono uppercase tracking-widest text-brand-mink mb-2">Recipient / Investor</label>
-            <input 
-              type="text" 
-              name="investorName"
-              value={contextData.investorName}
-              onChange={handleInputChange}
-              className="w-full bg-brand-black border border-white/20 p-3 rounded text-white focus:border-brand-mink focus:outline-none transition-colors"
-              placeholder="e.g. Anders at Dormy"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-mono uppercase tracking-widest text-brand-mink mb-2">Meeting Purpose</label>
-            <input 
-              type="text" 
-              name="meetingPurpose"
-              value={contextData.meetingPurpose}
-              onChange={handleInputChange}
-              className="w-full bg-brand-black border border-white/20 p-3 rounded text-white focus:border-brand-mink focus:outline-none transition-colors"
-              placeholder="e.g. Strategic Partnership"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-mono uppercase tracking-widest text-brand-mink mb-2">Valuation (Pre)</label>
-              <input 
-                type="text" 
-                name="valuation"
-                value={contextData.valuation}
-                onChange={handleInputChange}
-                className="w-full bg-brand-black border border-white/20 p-3 rounded text-white focus:border-brand-mink focus:outline-none transition-colors"
-              />
+    <div className="h-screen bg-[#111] text-brand-polar flex flex-col md:flex-row overflow-hidden font-sans">
+      
+      {/* --- LEFT PANEL: MISSION DATA --- */}
+      <div className="w-full md:w-[400px] flex flex-col border-r border-white/5 bg-[#151515] z-20 shadow-2xl h-full">
+        
+        {/* Header */}
+        <div className="p-6 border-b border-white/5 bg-brand-black flex-shrink-0">
+          <div className="flex items-center gap-3 mb-1">
+            <div className="w-10 h-10 rounded-sm flex items-center justify-center shadow-[0_0_15px_rgba(255,34,76,0.2)]">
+               <img 
+                 src="https://clfejcuoqvcoelxjcuax.supabase.co/storage/v1/object/public/Brand%20filer/Logo/Make_Icon_256px.png" 
+                 alt="Make Golf" 
+                 className="w-full h-full object-contain"
+               />
             </div>
             <div>
-              <label className="block text-xs font-mono uppercase tracking-widest text-brand-mink mb-2">Ask Amount</label>
-              <input 
-                type="text" 
-                name="askAmount"
-                value={contextData.askAmount}
-                onChange={handleInputChange}
-                className="w-full bg-brand-black border border-white/20 p-3 rounded text-white focus:border-brand-mink focus:outline-none transition-colors"
-              />
+                <h1 className="text-lg font-display font-bold text-white leading-none">Mission Control</h1>
+                <div className="text-[10px] font-mono text-white/30 uppercase tracking-widest">v2.4.0 Stable</div>
             </div>
           </div>
         </div>
 
-        <button 
-          onClick={startPresentation}
-          className="mt-12 w-full bg-brand-mink text-white font-display font-bold uppercase py-4 rounded hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2"
-        >
-          <Play className="w-5 h-5 fill-current" /> Start Presentation
-        </button>
-      </div>
-
-      {/* Right Panel: Slide Picker */}
-      <div className="w-full md:w-2/3 p-8 overflow-y-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-xl font-display uppercase">Slide Deck ({selectedSlides.length} selected)</h2>
-          <div className="text-xs font-mono text-white/40">Drag to reorder (Coming Soon)</div>
+        {/* Tabs */}
+        <div className="flex border-b border-white/5 flex-shrink-0">
+            <button 
+                onClick={() => setActiveTab('context')}
+                className={`flex-1 py-3 text-xs font-mono uppercase tracking-widest transition-colors ${activeTab === 'context' ? 'bg-white/5 text-brand-mink border-b-2 border-brand-mink' : 'text-white/30 hover:text-white'}`}
+            >
+                Context
+            </button>
+            <button 
+                onClick={() => setActiveTab('financials')}
+                className={`flex-1 py-3 text-xs font-mono uppercase tracking-widest transition-colors ${activeTab === 'financials' ? 'bg-white/5 text-brand-mink border-b-2 border-brand-mink' : 'text-white/30 hover:text-white'}`}
+            >
+                Financials
+            </button>
         </div>
 
-        <div className="grid grid-cols-1 gap-3">
-          {slides.map((slide, idx) => {
-            const isSelected = selectedSlides.includes(slide.id);
-            return (
-              <div 
-                key={slide.id}
-                onClick={() => toggleSlide(slide.id)}
-                className={`p-4 rounded border cursor-pointer flex items-center gap-4 transition-all ${isSelected ? 'bg-white/5 border-brand-mink/50' : 'bg-transparent border-white/5 opacity-50'}`}
-              >
-                <div className={`text-brand-mink`}>
-                  {isSelected ? <CheckSquare className="w-5 h-5" /> : <Square className="w-5 h-5" />}
+        {/* Form Area - Scrollable */}
+        <div className="flex-grow overflow-y-auto p-6 space-y-6 custom-scrollbar">
+            
+            {activeTab === 'context' && (
+                <div className="space-y-5">
+                    {/* Investor Identity */}
+                    <div className="bg-white/5 p-4 rounded-lg border border-white/5">
+                        <label className="text-[10px] font-mono uppercase text-brand-mink mb-3 block flex justify-between">
+                            Target Entity <Globe className="w-3 h-3 opacity-50" />
+                        </label>
+                        <div className="space-y-3">
+                            <input 
+                                type="text" name="investorName" value={contextData.investorName} onChange={handleInputChange}
+                                className="w-full bg-black border border-white/10 p-2 text-sm rounded text-white focus:border-brand-mink focus:outline-none placeholder:text-white/10 font-display"
+                                placeholder="Investor / Company Name"
+                            />
+                            <div className="flex gap-2">
+                                <input 
+                                    type="text" name="partnerWebsite" value={contextData.partnerWebsite} onChange={handleInputChange}
+                                    className="w-full bg-black border border-white/10 p-2 text-sm rounded text-white focus:border-brand-mink focus:outline-none placeholder:text-white/10 font-mono"
+                                    placeholder="website.com"
+                                />
+                                <button 
+                                    onClick={fetchLogo}
+                                    disabled={!contextData.partnerWebsite || logoLoading}
+                                    className="bg-white/10 hover:bg-white/20 text-white p-2 rounded border border-white/10 disabled:opacity-50"
+                                >
+                                    {logoLoading ? <div className="w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></div> : <Search className="w-4 h-4" />}
+                                </button>
+                            </div>
+                            {contextData.partnerLogo && (
+                                <div className="flex items-center gap-2 bg-black/50 p-2 rounded border border-white/10">
+                                    <img src={contextData.partnerLogo} alt="Logo" className="h-6 w-6 object-contain" />
+                                    <span className="text-[10px] text-green-500 font-mono">Logo Acquired</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="space-y-3">
+                        <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-widest text-white/40 mb-1">Meeting Objective</label>
+                            <input 
+                                type="text" name="meetingPurpose" value={contextData.meetingPurpose} onChange={handleInputChange}
+                                className="w-full bg-transparent border-b border-white/10 py-2 text-sm text-white focus:border-brand-mink focus:outline-none transition-colors"
+                                placeholder="e.g. Series A Lead"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-widest text-white/40 mb-1">Contact Email</label>
+                            <input 
+                                type="email" name="contactEmail" value={contextData.contactEmail} onChange={handleInputChange}
+                                className="w-full bg-transparent border-b border-white/10 py-2 text-sm text-white focus:border-brand-mink focus:outline-none transition-colors"
+                                placeholder="investor@fund.com"
+                            />
+                        </div>
+                    </div>
                 </div>
-                <div className="font-mono text-xs text-white/30 w-8">{(idx + 1).toString().padStart(2, '0')}</div>
-                <div className="font-display font-bold text-lg flex-grow">{slide.title}</div>
-                {isSelected && <div className="w-2 h-2 bg-brand-mink rounded-full animate-pulse"></div>}
-              </div>
-            );
-          })}
+            )}
+
+            {activeTab === 'financials' && (
+                <div className="space-y-5">
+                    <div className="bg-white/5 p-4 rounded-lg border border-white/5 space-y-4">
+                        <label className="text-[10px] font-mono uppercase text-brand-mink mb-2 block">Deal Structure</label>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <span className="text-[9px] text-white/30 uppercase block mb-1">Pre-Money Val</span>
+                                <input 
+                                    type="text" name="valuation" value={contextData.valuation} onChange={handleInputChange}
+                                    className="w-full bg-black border border-white/10 p-2 text-sm rounded text-white font-mono text-right"
+                                />
+                            </div>
+                            <div>
+                                <span className="text-[9px] text-white/30 uppercase block mb-1">Ask Amount</span>
+                                <input 
+                                    type="text" name="askAmount" value={contextData.askAmount} onChange={handleInputChange}
+                                    className="w-full bg-black border border-white/10 p-2 text-sm rounded text-white font-mono text-right"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="space-y-3">
+                         <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-widest text-white/40 mb-1">Monthly Burn</label>
+                            <input 
+                                type="text" name="burnRate" value={contextData.burnRate} onChange={handleInputChange}
+                                className="w-full bg-transparent border-b border-white/10 py-2 text-sm text-white focus:border-brand-mink focus:outline-none transition-colors font-mono"
+                                placeholder="e.g. 450k SEK"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-[10px] font-mono uppercase tracking-widest text-white/40 mb-1">Current Runway</label>
+                            <input 
+                                type="text" name="runway" value={contextData.runway} onChange={handleInputChange}
+                                className="w-full bg-transparent border-b border-white/10 py-2 text-sm text-white focus:border-brand-mink focus:outline-none transition-colors font-mono"
+                                placeholder="e.g. 8 Months"
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Export Actions */}
+            <div className="pt-6 border-t border-white/10 mt-6">
+                <label className="text-[10px] font-mono uppercase text-white/30 mb-3 block">Post-Meeting Actions</label>
+                <div className="grid grid-cols-2 gap-3">
+                    <button onClick={handleExportPDF} className="flex items-center justify-center gap-2 bg-[#222] hover:bg-[#333] border border-white/10 rounded py-3 text-xs font-bold text-white transition-colors">
+                        <Download className="w-3 h-3" /> PDF Export
+                    </button>
+                    <button onClick={handleEmailDeck} className="flex items-center justify-center gap-2 bg-[#222] hover:bg-[#333] border border-white/10 rounded py-3 text-xs font-bold text-white transition-colors">
+                        <Mail className="w-3 h-3" /> Email Link
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        {/* Launch Button */}
+        <div className="p-6 bg-brand-black border-t border-white/10 flex-shrink-0">
+            <button 
+                onClick={startPresentation}
+                className="w-full bg-brand-mink text-white font-display font-bold uppercase py-4 rounded hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,34,76,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)] transform hover:-translate-y-0.5"
+            >
+                <Play className="w-5 h-5 fill-current" /> Initialize Deck
+            </button>
         </div>
       </div>
+
+      {/* --- RIGHT PANEL: DECK ARCHITECTURE --- */}
+      <div className="flex-grow bg-[#0A0A0A] overflow-hidden flex flex-col relative h-full">
+         
+         {/* Top Bar */}
+         <div className="h-16 border-b border-white/5 flex justify-between items-center px-8 bg-[#0A0A0A]/90 backdrop-blur z-10 flex-shrink-0">
+            <div className="flex items-center gap-4">
+                <h2 className="text-sm font-display font-bold text-white uppercase tracking-wide">Deck Architecture</h2>
+                <span className="bg-brand-surface border border-white/10 text-white/50 px-2 py-0.5 rounded text-[10px] font-mono">
+                    {selectedSlides.length} Slides Active
+                </span>
+            </div>
+            <div className="text-[10px] font-mono text-white/30">
+                DRAG & DROP DISABLED (USE CONTROLS)
+            </div>
+         </div>
+
+         {/* Grid Canvas - SCROLLABLE */}
+         <div className="flex-grow overflow-y-auto p-8 custom-scrollbar">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 pb-20">
+                {slides.map((slide, idx) => {
+                    const isSelected = selectedSlides.includes(slide.id);
+                    // Determine index in selected array for numbering
+                    const selectionIndex = selectedSlides.indexOf(slide.id);
+                    
+                    return (
+                        <div 
+                           key={slide.id}
+                           className={`relative group rounded-xl border-2 transition-all duration-300 overflow-hidden flex flex-col ${isSelected ? 'border-brand-mink/50 bg-[#151515] shadow-2xl' : 'border-white/5 bg-[#111] opacity-60 grayscale'}`}
+                        >
+                           {/* Header */}
+                           <div className="p-3 flex justify-between items-center border-b border-white/5 bg-[#191919]">
+                               <div className="flex items-center gap-3">
+                                   <button onClick={() => toggleSlide(slide.id)} className="text-white/50 hover:text-brand-mink transition-colors">
+                                       {isSelected ? <CheckSquare className="w-4 h-4 text-brand-mink" /> : <Square className="w-4 h-4" />}
+                                   </button>
+                                   <span className={`text-sm font-display font-bold ${isSelected ? 'text-white' : 'text-white/40'}`}>
+                                       {isSelected ? (selectionIndex + 1).toString().padStart(2, '0') : '--'} // {slide.title}
+                                   </span>
+                               </div>
+                           </div>
+
+                           {/* Preview Window */}
+                           <div className="aspect-video w-full bg-black relative">
+                                <div className="absolute inset-0 z-0">
+                                   <SlidePreview component={slide.component} context={contextData} />
+                                </div>
+                                {/* Overlay to prevent interaction with slide during setup */}
+                                <div className="absolute inset-0 z-10 bg-transparent" />
+                                
+                                {!isSelected && (
+                                    <div className="absolute inset-0 z-20 bg-black/60 backdrop-blur-[1px] flex items-center justify-center">
+                                        <div className="bg-black border border-white/10 px-3 py-1 rounded text-[10px] font-mono uppercase tracking-widest text-white/50">
+                                            Skipped
+                                        </div>
+                                    </div>
+                                )}
+                           </div>
+
+                           {/* Controls Footer */}
+                           {isSelected && (
+                               <div className="p-2 border-t border-white/5 flex justify-between items-center bg-[#191919]">
+                                   <div className="text-[9px] font-mono text-white/20 uppercase pl-2">
+                                       ID: {slide.id}
+                                   </div>
+                                   <div className="flex gap-1">
+                                       <button className="p-1.5 hover:bg-white/10 rounded text-white/40 hover:text-white" title="Move Up">
+                                            <ArrowUp className="w-3 h-3" />
+                                       </button>
+                                       <button className="p-1.5 hover:bg-white/10 rounded text-white/40 hover:text-white" title="Move Down">
+                                            <ArrowDown className="w-3 h-3" />
+                                       </button>
+                                   </div>
+                               </div>
+                           )}
+                        </div>
+                    );
+                })}
+            </div>
+         </div>
+
+      </div>
+
     </div>
   );
 };

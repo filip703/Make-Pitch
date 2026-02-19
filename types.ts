@@ -1,8 +1,13 @@
 export interface SlideContextData {
   investorName: string;
+  partnerWebsite: string;
+  partnerLogo: string | null;
   meetingPurpose: string;
   valuation: string;
   askAmount: string;
+  burnRate: string;
+  runway: string;
+  contactEmail: string;
 }
 
 export interface SlideDefinition {

@@ -10,16 +10,17 @@ const Problem: React.FC = () => {
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
       >
-        <span className="text-brand-mink font-mono text-xs uppercase tracking-widest mb-4 block">THE PROBLEM</span>
+        <span className="text-brand-mink font-mono text-xs uppercase tracking-widest mb-4 block">THE CHALLENGE</span>
         <h2 className="text-5xl md:text-6xl font-display text-white mb-6 uppercase leading-tight">
-          The Brutal<br/>Truth.
+          One Size Fits<br/>None.
         </h2>
         <p className="text-xl text-brand-polar/70 font-light leading-relaxed mb-8">
-          The industry is built on a lie: that mass-produced, standardized equipment can perform for unique biomechanics. 
+          Traditional manufacturing is a miracle of scale, but a limitation for performance. 
+          When you cast metal, you have to lock in the geometry for thousands of units.
         </p>
         <div className="border-l-2 border-brand-mink pl-6 py-2">
             <p className="text-2xl text-white font-display uppercase">90% of golfers</p>
-            <p className="text-sm font-mono text-brand-polar/50">Are playing clubs designed for an "average" that doesn't exist.</p>
+            <p className="text-sm font-mono text-brand-polar/50">Are adapting their swing to the club, rather than the club adapting to them.</p>
         </div>
       </motion.div>
 
@@ -34,13 +35,13 @@ const Problem: React.FC = () => {
              <div className="absolute top-0 right-0 p-4 opacity-10">
                 <User className="w-16 h-16 text-white" />
              </div>
-             <h3 className="text-xl font-display text-white mb-2">Unique Sving DNA</h3>
+             <h3 className="text-xl font-display text-white mb-2">Unique Swing DNA</h3>
              <p className="text-sm text-brand-polar/60 font-mono">
-                Every player has a unique attack angle, club path, and closure rate.
+                Every player prints a unique biometric signature on the ball. Attack angle, path, and closure rate are like fingerprints.
              </p>
         </div>
 
-        {/* Card 2 (Bad) */}
+        {/* Card 2 */}
         <div className="bg-brand-surface p-8 rounded-xl border border-brand-mink/30 relative overflow-hidden group">
              <div className="absolute top-0 right-0 p-4 opacity-10">
                 <Box className="w-16 h-16 text-brand-mink" />
@@ -50,8 +51,7 @@ const Problem: React.FC = () => {
              </div>
              <h3 className="text-xl font-display text-white mb-2">Standard Hardware</h3>
              <p className="text-sm text-brand-polar/60 font-mono">
-                Manufacturers force players into 3 rigid "flex buckets" and fixed head weights. 
-                <span className="text-white block mt-2 font-bold">The player adapts to the club, instead of the club adapting to the player.</span>
+                Retail clubs offer limited adjustability (hosels or weights). They cannot change the fundamental center of mass or sole geometry to suit the player.
              </p>
         </div>
       </motion.div>
