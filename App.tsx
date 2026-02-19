@@ -123,38 +123,74 @@ const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [nextSlide, prevSlide, mode]);
 
-  if (mode === 'setup') {
-    return (
-      <SetupScreen 
-        slides={ALL_SLIDES}
-        selectedSlides={selectedSlideIds}
-        toggleSlide={toggleSlide}
-        contextData={contextData}
-        setContextData={setContextData}
-        startPresentation={() => {
-          setCurrentSlideIndex(0);
-          setMode('present');
-        }}
-      />
-    );
-  }
-
   // Get current slide component
   const CurrentSlideComponent = activeSlides[currentSlideIndex].component;
 
   return (
-    <SlideLayout
-      currentSlide={currentSlideIndex}
-      totalSlides={activeSlides.length}
-      nextSlide={nextSlide}
-      prevSlide={prevSlide}
-      exitPresentation={() => setMode('setup')}
-      title={activeSlides[currentSlideIndex].title}
-      investorName={contextData.investorName}
-      partnerLogo={contextData.partnerLogo}
-    >
-      <CurrentSlideComponent context={contextData} />
-    </SlideLayout>
+    <>
+      {/* 
+        ========================================
+        NORMAL VIEW (Screen)
+        ========================================
+      */}
+      <div className="print:hidden h-full">
+        {mode === 'setup' ? (
+          <SetupScreen 
+            slides={ALL_SLIDES}
+            selectedSlides={selectedSlideIds}
+            toggleSlide={toggleSlide}
+            contextData={contextData}
+            setContextData={setContextData}
+            startPresentation={() => {
+              setCurrentSlideIndex(0);
+              setMode('present');
+            }}
+          />
+        ) : (
+          <SlideLayout
+            currentSlide={currentSlideIndex}
+            totalSlides={activeSlides.length}
+            nextSlide={nextSlide}
+            prevSlide={prevSlide}
+            exitPresentation={() => setMode('setup')}
+            title={activeSlides[currentSlideIndex].title}
+            investorName={contextData.investorName}
+            partnerLogo={contextData.partnerLogo}
+          >
+            <CurrentSlideComponent context={contextData} />
+          </SlideLayout>
+        )}
+      </div>
+
+      {/* 
+        ========================================
+        PRINT VIEW (PDF Export)
+        Hidden on screen, Visible only in Print
+        ========================================
+      */}
+      <div className="hidden print:block fixed inset-0 z-[9999] bg-[#191919]">
+        {activeSlides.map((slide, index) => {
+          const SlideComponent = slide.component;
+          return (
+            <div key={slide.id} className="w-screen h-screen break-after-page page-break relative overflow-hidden bg-[#191919]">
+              <SlideLayout
+                currentSlide={index}
+                totalSlides={activeSlides.length}
+                nextSlide={() => {}}
+                prevSlide={() => {}}
+                exitPresentation={() => {}}
+                title={slide.title}
+                investorName={contextData.investorName}
+                partnerLogo={contextData.partnerLogo}
+                isPrintMode={true}
+              >
+                <SlideComponent context={contextData} />
+              </SlideLayout>
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 };
 
