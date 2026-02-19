@@ -1,11 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Pause, Volume2, VolumeX, Maximize } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, Volume1 } from 'lucide-react';
 
 const OutroVideo: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [volume, setVolume] = useState(1);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -32,8 +33,28 @@ const OutroVideo: React.FC = () => {
 
   const toggleMute = () => {
     if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
+      const newMuted = !isMuted;
+      videoRef.current.muted = newMuted;
+      setIsMuted(newMuted);
+      if (!newMuted && volume === 0) {
+        setVolume(1);
+        videoRef.current.volume = 1;
+      }
+    }
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVol = parseFloat(e.target.value);
+    setVolume(newVol);
+    if (videoRef.current) {
+      videoRef.current.volume = newVol;
+      if (newVol === 0) {
+        videoRef.current.muted = true;
+        setIsMuted(true);
+      } else {
+        videoRef.current.muted = false;
+        setIsMuted(false);
+      }
     }
   };
 
@@ -100,13 +121,28 @@ const OutroVideo: React.FC = () => {
                 <div className="absolute inset-y-0 left-0 w-full h-full opacity-0 group-hover/bar:opacity-20 bg-white transition-opacity"></div>
             </div>
 
-            <button onClick={toggleMute} className="hover:text-brand-mink transition-colors text-white">
-                {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
-            </button>
+            {/* Volume Control Group */}
+            <div className="flex items-center gap-2 group/volume relative">
+                <button onClick={toggleMute} className="hover:text-brand-mink transition-colors text-white w-8">
+                    {isMuted || volume === 0 ? <VolumeX className="w-6 h-6" /> : volume < 0.5 ? <Volume1 className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+                </button>
+                
+                <div className="w-0 overflow-hidden group-hover/volume:w-24 transition-all duration-300 flex items-center">
+                    <input 
+                        type="range" 
+                        min="0" 
+                        max="1" 
+                        step="0.05" 
+                        value={isMuted ? 0 : volume}
+                        onChange={handleVolumeChange}
+                        className="w-20 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-brand-mink"
+                    />
+                </div>
+            </div>
 
             <div className="h-4 w-px bg-white/20"></div>
 
-            <div className="text-xs font-mono text-white/50 uppercase tracking-widest">
+            <div className="text-xs font-mono text-white/50 uppercase tracking-widest hidden md:block">
                 Make Golf Brand Video
             </div>
          </div>
