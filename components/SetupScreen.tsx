@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Settings, Play, CheckSquare, Square, Globe, Search, ArrowUp, ArrowDown, Download, Mail, Eye, GripVertical } from 'lucide-react';
+import React, { useState } from 'react';
+import { Play, CheckSquare, Square, Globe, Search, ArrowUp, ArrowDown, Download, Mail, Link as LinkIcon, AlertCircle } from 'lucide-react';
 import { SlideDefinition, SlideContextData } from '../types';
 
 interface SetupScreenProps {
   slides: SlideDefinition[];
   selectedSlides: string[];
   toggleSlide: (id: string) => void;
-  reorderSlides?: (newOrder: string[]) => void; // New prop for reordering
+  reorderSlides?: (newOrder: string[]) => void;
   contextData: SlideContextData;
   setContextData: (data: SlideContextData) => void;
   startPresentation: () => void;
@@ -35,32 +34,62 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   
   const [activeTab, setActiveTab] = useState<'context' | 'financials'>('context');
   const [logoLoading, setLogoLoading] = useState(false);
-  
-  // Local state to manage order in UI before "committing" if needed, 
-  // but assuming parent passes ordered slides, we just manipulate the parent's selection order logic if possible.
-  // For this version, we will assume `slides` prop passed in IS the master list order.
-  // Since we can't easily change the `ALL_SLIDES` constant in parent without a setter, 
-  // we will implement a visual filter here.
+  const [logoError, setLogoError] = useState(false);
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setContextData({ ...contextData, [name]: value });
   };
 
+  const getCleanDomain = (url: string) => {
+    try {
+      // Remove protocol
+      let domain = url.replace(/(^\w+:|^)\/\//, '');
+      // Remove www.
+      domain = domain.replace(/^www\./, '');
+      // Remove path/query params
+      domain = domain.split('/')[0];
+      return domain;
+    } catch (e) {
+      return url;
+    }
+  };
+
   const fetchLogo = async () => {
     if (!contextData.partnerWebsite) return;
     setLogoLoading(true);
+    setLogoError(false);
     
-    // Simulate API delay & fetch using Clearbit free logo API
-    // Clean URL first
-    let domain = contextData.partnerWebsite.replace(/(^\w+:|^)\/\//, '').split('/')[0];
-    const logoUrl = `https://logo.clearbit.com/${domain}`;
+    const domain = getCleanDomain(contextData.partnerWebsite);
     
-    // In a real app we'd verify it exists, here we just set it
-    setTimeout(() => {
-        setContextData({ ...contextData, partnerLogo: logoUrl });
+    // Strategy: Try Clearbit first (Best for logos), Fallback to Google (Best for Icons/Favicons)
+    const clearbitUrl = `https://logo.clearbit.com/${domain}`;
+    const googleUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=256`;
+
+    // Create a temporary image to test if Clearbit works
+    const img = new Image();
+    img.src = clearbitUrl;
+
+    img.onload = () => {
+        setContextData({ ...contextData, partnerLogo: clearbitUrl });
         setLogoLoading(false);
-    }, 800);
+    };
+
+    img.onerror = () => {
+        // Clearbit failed, try Google
+        const img2 = new Image();
+        img2.src = googleUrl;
+        
+        img2.onload = () => {
+             setContextData({ ...contextData, partnerLogo: googleUrl });
+             setLogoLoading(false);
+        };
+        
+        img2.onerror = () => {
+            setLogoError(true);
+            setLogoLoading(false);
+        };
+    };
   };
 
   const handleExportPDF = () => {
@@ -128,24 +157,50 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                                 className="w-full bg-black border border-white/10 p-2 text-sm rounded text-white focus:border-brand-mink focus:outline-none placeholder:text-white/10 font-display"
                                 placeholder="Investor / Company Name"
                             />
-                            <div className="flex gap-2">
+                            
+                            {/* Website Fetcher */}
+                            <div className="flex gap-2 relative">
                                 <input 
                                     type="text" name="partnerWebsite" value={contextData.partnerWebsite} onChange={handleInputChange}
                                     className="w-full bg-black border border-white/10 p-2 text-sm rounded text-white focus:border-brand-mink focus:outline-none placeholder:text-white/10 font-mono"
-                                    placeholder="website.com"
+                                    placeholder="dormy.se"
                                 />
                                 <button 
                                     onClick={fetchLogo}
                                     disabled={!contextData.partnerWebsite || logoLoading}
-                                    className="bg-white/10 hover:bg-white/20 text-white p-2 rounded border border-white/10 disabled:opacity-50"
+                                    className="bg-white/10 hover:bg-white/20 text-white p-2 rounded border border-white/10 disabled:opacity-50 transition-colors"
+                                    title="Auto-fetch Logo"
                                 >
                                     {logoLoading ? <div className="w-4 h-4 border-2 border-white/50 border-t-transparent rounded-full animate-spin"></div> : <Search className="w-4 h-4" />}
                                 </button>
                             </div>
-                            {contextData.partnerLogo && (
-                                <div className="flex items-center gap-2 bg-black/50 p-2 rounded border border-white/10">
-                                    <img src={contextData.partnerLogo} alt="Logo" className="h-6 w-6 object-contain" />
-                                    <span className="text-[10px] text-green-500 font-mono">Logo Acquired</span>
+                            
+                            {/* Logo URL Override / Display */}
+                            <div className="relative">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <LinkIcon className="w-3 h-3 text-white/30" />
+                                    <label className="text-[9px] font-mono uppercase text-white/30">Direct Logo URL (Optional)</label>
+                                </div>
+                                <input 
+                                    type="text" name="partnerLogo" value={contextData.partnerLogo || ''} onChange={handleInputChange}
+                                    className="w-full bg-black/50 border border-white/5 p-2 text-xs rounded text-white/60 focus:border-brand-mink focus:text-white focus:outline-none font-mono"
+                                    placeholder="https://..."
+                                />
+                            </div>
+
+                            {/* Status Display */}
+                            {logoError && (
+                                <div className="flex items-center gap-2 text-brand-mink text-[10px] font-mono">
+                                    <AlertCircle className="w-3 h-3" /> Could not fetch auto-logo. Paste URL above.
+                                </div>
+                            )}
+
+                            {contextData.partnerLogo && !logoError && (
+                                <div className="flex items-center gap-3 bg-black/50 p-2 rounded border border-white/10 mt-2">
+                                    <div className="w-8 h-8 bg-white/5 rounded flex items-center justify-center p-1">
+                                        <img src={contextData.partnerLogo} alt="Logo" className="max-w-full max-h-full object-contain" />
+                                    </div>
+                                    <span className="text-[10px] text-green-500 font-mono">Logo Loaded</span>
                                 </div>
                             )}
                         </div>
