@@ -10,17 +10,21 @@ import Mission from './components/slides/Mission';
 import Problem from './components/slides/Problem';
 import SwingDNA from './components/slides/SwingDNA';
 import Concept from './components/slides/Concept';
+import GhostMap from './components/slides/GhostMap';
 import MakeDNA from './components/slides/MakeDNA';
 import Configurator from './components/slides/Configurator';
 import SaaS from './components/slides/SaaS';
 import Traction from './components/slides/Traction';
 import Technology from './components/slides/Technology';
 import Product from './components/slides/Product';
+import ProductXRay from './components/slides/ProductXRay';
 import Market from './components/slides/Market';
 import Business from './components/slides/Business';
+import ProfitSimulator from './components/slides/ProfitSimulator';
 import Financials from './components/slides/Financials';
 import Roadmap from './components/slides/Roadmap';
 import WhyMakeGolf from './components/slides/WhyMakeGolf'; 
+import ObjectionKiller from './components/slides/ObjectionKiller';
 import Team from './components/slides/Team';
 import Ask from './components/slides/Ask';
 import WhyNow from './components/slides/WhyNow';
@@ -35,17 +39,21 @@ const ALL_SLIDES: SlideDefinition[] = [
   { id: 'swingdna', title: 'Unique DNA', component: SwingDNA, defaultChecked: true },
   { id: 'whynow', title: 'Why Now?', component: WhyNow, defaultChecked: true },
   { id: 'concept', title: 'The Concept', component: Concept, defaultChecked: true },
+  { id: 'ghostmap', title: 'Digital Logistics', component: GhostMap, defaultChecked: true },
   { id: 'makedna', title: 'MAKE DNA (AI Engine)', component: MakeDNA, defaultChecked: true },
   { id: 'configurator', title: 'User Experience', component: Configurator, defaultChecked: true },
   { id: 'tech', title: 'Technology & Partners', component: Technology, defaultChecked: true },
   { id: 'traction', title: 'Traction & Timeline', component: Traction, defaultChecked: true },
   { id: 'product', title: 'The Hardware', component: Product, defaultChecked: false },
+  { id: 'productxray', title: 'X-Ray Tech Reveal', component: ProductXRay, defaultChecked: true },
   { id: 'saas', title: 'B2B/SaaS Model', component: SaaS, defaultChecked: true },
   { id: 'market', title: 'Market Opportunity', component: Market, defaultChecked: true },
   { id: 'business', title: 'Business Model', component: Business, defaultChecked: true },
+  { id: 'profit', title: 'Profit Simulator', component: ProfitSimulator, defaultChecked: true },
   { id: 'financials', title: 'Financial Highlights', component: Financials, defaultChecked: true },
   { id: 'roadmap', title: 'Roadmap', component: Roadmap, defaultChecked: true },
   { id: 'whymakegolf', title: 'Competitive Advantage', component: WhyMakeGolf, defaultChecked: true },
+  { id: 'objections', title: 'Objection Killer', component: ObjectionKiller, defaultChecked: true },
   { id: 'team', title: 'The Team', component: Team, defaultChecked: true },
   { id: 'ask', title: 'The Ask', component: Ask, defaultChecked: true },
   { id: 'outro', title: 'Brand Video', component: OutroVideo, defaultChecked: true }
