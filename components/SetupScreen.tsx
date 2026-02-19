@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, CheckSquare, Square, Globe, Search, ArrowUp, ArrowDown, Download, Mail, Link as LinkIcon, AlertCircle } from 'lucide-react';
+import { Play, CheckSquare, Square, Globe, Search, ArrowUp, ArrowDown, Download, Mail, Link as LinkIcon, AlertCircle, Info, X, Zap, BarChart3, Presentation } from 'lucide-react';
 import { SlideDefinition, SlideContextData } from '../types';
 
 interface SetupScreenProps {
@@ -35,6 +35,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   const [activeTab, setActiveTab] = useState<'context' | 'financials'>('context');
   const [logoLoading, setLogoLoading] = useState(false);
   const [logoError, setLogoError] = useState(false);
+  const [showGuide, setShowGuide] = useState(true); // Default open to show instructions
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -103,8 +104,99 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   };
 
   return (
-    <div className="h-screen bg-[#111] text-brand-polar flex flex-col md:flex-row overflow-hidden font-sans">
+    <div className="h-screen bg-[#111] text-brand-polar flex flex-col md:flex-row overflow-hidden font-sans relative">
       
+      {/* --- INSTRUCTIONAL POPUP (HOW TO) --- */}
+      {showGuide && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
+           <div className="max-w-2xl w-full bg-[#151515] border border-white/10 rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
+              
+              {/* Popup Header */}
+              <div className="p-6 border-b border-white/10 flex justify-between items-center bg-brand-black">
+                 <div className="flex items-center gap-3">
+                    <div className="bg-brand-mink/20 p-2 rounded text-brand-mink">
+                        <Zap className="w-5 h-5" />
+                    </div>
+                    <div>
+                        <h3 className="text-xl font-display font-bold text-white uppercase">Make Golf PitchOS™</h3>
+                        <p className="text-[10px] font-mono text-white/50 uppercase tracking-widest">Instruktionsmanual</p>
+                    </div>
+                 </div>
+                 <button onClick={() => setShowGuide(false)} className="text-white/40 hover:text-white transition-colors">
+                    <X className="w-6 h-6" />
+                 </button>
+              </div>
+
+              {/* Popup Content */}
+              <div className="p-8 overflow-y-auto space-y-8 custom-scrollbar bg-[#111]">
+                 
+                 <div className="space-y-2">
+                    <h4 className="text-brand-mink font-mono text-xs uppercase tracking-widest flex items-center gap-2">
+                       <Globe className="w-4 h-4" /> Steg 1: Context (Personalisering)
+                    </h4>
+                    <p className="text-brand-polar/80 text-sm leading-relaxed">
+                       <strong>Varför?</strong> Investerare ser hundratals generiska decks. Genom att fylla i <em>"Target Entity"</em> och hämta deras logotyp via <em>"Partner Website"</em>, co-brandar systemet automatiskt hela presentationen.
+                    </p>
+                    <ul className="text-xs text-brand-polar/50 list-disc list-inside ml-2 space-y-1">
+                       <li>Deras logotyp visas bredvid Make Golfs logotyp på alla slides (header).</li>
+                       <li>Deras namn dyker upp dynamiskt i texten på Cover och Ask-sliden.</li>
+                       <li>Detta bygger omedelbart förtroende och visar på professionalitet.</li>
+                    </ul>
+                 </div>
+
+                 <div className="h-px bg-white/5 w-full"></div>
+
+                 <div className="space-y-2">
+                    <h4 className="text-brand-green font-mono text-xs uppercase tracking-widest flex items-center gap-2">
+                       <BarChart3 className="w-4 h-4" /> Steg 2: Financials (Siffrorna)
+                    </h4>
+                    <p className="text-brand-polar/80 text-sm leading-relaxed">
+                       Fyll i siffrorna under fliken <em>"Financials"</em>. Dessa är inte bara anteckningar – de injiceras direkt i "The Ask" och "Financial Highlights"-slidena.
+                    </p>
+                    <ul className="text-xs text-brand-polar/50 list-disc list-inside ml-2 space-y-1">
+                       <li><strong>Ask Amount:</strong> Hur mycket vi reser (t.ex. 5 MSEK).</li>
+                       <li><strong>Valuation:</strong> Pre-money värdering (t.ex. 25 MSEK).</li>
+                       <li><strong>Runway:</strong> Hur länge pengarna räcker.</li>
+                    </ul>
+                 </div>
+
+                 <div className="h-px bg-white/5 w-full"></div>
+
+                 <div className="space-y-2">
+                    <h4 className="text-brand-blue font-mono text-xs uppercase tracking-widest flex items-center gap-2">
+                       <Presentation className="w-4 h-4" /> Steg 3: Presentation
+                    </h4>
+                    <p className="text-brand-polar/80 text-sm leading-relaxed">
+                       När du klickar på <strong>"INITIALIZE DECK"</strong> startar presentationen i fullskärmsläge.
+                    </p>
+                    <div className="grid grid-cols-2 gap-4 mt-2">
+                       <div className="bg-white/5 p-3 rounded border border-white/5">
+                          <span className="text-white font-bold text-xs block mb-1">Pil Höger / Space</span>
+                          <span className="text-[10px] text-white/50">Nästa Slide</span>
+                       </div>
+                       <div className="bg-white/5 p-3 rounded border border-white/5">
+                          <span className="text-white font-bold text-xs block mb-1">ESC</span>
+                          <span className="text-[10px] text-white/50">Avsluta & Redigera</span>
+                       </div>
+                    </div>
+                 </div>
+
+              </div>
+
+              {/* Popup Footer */}
+              <div className="p-6 border-t border-white/10 bg-brand-black">
+                 <button 
+                    onClick={() => setShowGuide(false)}
+                    className="w-full bg-brand-mink text-white font-display font-bold uppercase py-3 rounded hover:bg-white hover:text-black transition-colors"
+                 >
+                    Jag förstår, låt mig bygga
+                 </button>
+              </div>
+           </div>
+        </div>
+      )}
+
+
       {/* --- LEFT PANEL: MISSION DATA --- */}
       <div className="w-full md:w-[400px] flex flex-col border-r border-white/5 bg-[#151515] z-20 shadow-2xl h-full">
         
@@ -118,8 +210,17 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                  className="w-full h-full object-contain"
                />
             </div>
-            <div>
-                <h1 className="text-lg font-display font-bold text-white leading-none">Mission Control</h1>
+            <div className="flex-grow">
+                <div className="flex items-center gap-2">
+                    <h1 className="text-lg font-display font-bold text-white leading-none">Mission Control</h1>
+                    <button 
+                        onClick={() => setShowGuide(true)} 
+                        className="text-brand-mink hover:text-white transition-colors"
+                        title="Öppna Instruktioner"
+                    >
+                        <Info className="w-4 h-4" />
+                    </button>
+                </div>
                 <div className="text-[10px] font-mono text-white/30 uppercase tracking-widest">v2.4.0 Stable</div>
             </div>
           </div>
