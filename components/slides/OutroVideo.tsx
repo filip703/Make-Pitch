@@ -89,8 +89,8 @@ const OutroVideo: React.FC = () => {
         onClick={togglePlay}
       />
 
-      {/* Gradient Overlay for controls */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none transition-opacity duration-500 opacity-0 group-hover:opacity-100"></div>
+      {/* Gradient Overlay for visual depth */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none opacity-60"></div>
 
       {/* Centered Play Button (Visible when paused) */}
       {!isPlaying && (
@@ -104,47 +104,61 @@ const OutroVideo: React.FC = () => {
         </motion.button>
       )}
 
-      {/* Bottom Controls Bar */}
-      <div className="absolute bottom-0 left-0 w-full p-8 z-30 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-         <div className="flex items-center gap-6 max-w-4xl mx-auto bg-[#191919]/80 backdrop-blur-md border border-white/10 p-4 rounded-2xl">
+      {/* 
+        CONTROLS REPOSITIONED:
+        Moved to bottom-right and lifted (bottom-24) to clear the slide deck footer navigation.
+        Z-Index increased to 60 to ensure it sits on top of the layout footer.
+      */}
+      <div className="absolute bottom-24 right-6 md:right-12 z-[60] w-full max-w-sm">
+         <div className="flex flex-col gap-3 bg-[#191919]/90 backdrop-blur-md border border-white/10 p-5 rounded-2xl shadow-2xl">
             
-            <button onClick={togglePlay} className="hover:text-brand-mink transition-colors text-white">
-                {isPlaying ? <Pause className="w-6 h-6 fill-current" /> : <Play className="w-6 h-6 fill-current" />}
-            </button>
+            {/* Top Row: Title & Status */}
+            <div className="flex justify-between items-center mb-1">
+                <div className="text-xs font-mono text-white/50 uppercase tracking-widest">
+                    Brand Video
+                </div>
+                <div className="text-[10px] font-mono text-brand-mink uppercase animate-pulse">
+                    {isPlaying ? 'Playing' : 'Paused'}
+                </div>
+            </div>
 
-            {/* Progress Bar */}
+            {/* Middle Row: Progress Bar */}
             <div 
-                className="flex-grow h-2 bg-white/10 rounded-full cursor-pointer relative overflow-hidden group/bar"
+                className="w-full h-2 bg-white/10 rounded-full cursor-pointer relative overflow-hidden group/bar"
                 onClick={handleSeek}
             >
                 <div className="absolute inset-y-0 left-0 bg-brand-mink w-0 transition-all duration-100" style={{ width: `${progress}%` }}></div>
                 <div className="absolute inset-y-0 left-0 w-full h-full opacity-0 group-hover/bar:opacity-20 bg-white transition-opacity"></div>
             </div>
 
-            {/* Volume Control Group */}
-            <div className="flex items-center gap-2 group/volume relative">
-                <button onClick={toggleMute} className="hover:text-brand-mink transition-colors text-white w-8">
-                    {isMuted || volume === 0 ? <VolumeX className="w-6 h-6" /> : volume < 0.5 ? <Volume1 className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+            {/* Bottom Row: Play & Volume Controls */}
+            <div className="flex items-center justify-between pt-1">
+                <button onClick={togglePlay} className="hover:text-brand-mink transition-colors text-white focus:outline-none flex items-center gap-2">
+                    {isPlaying ? <Pause className="w-5 h-5 fill-current" /> : <Play className="w-5 h-5 fill-current" />}
+                    <span className="text-xs font-bold font-display uppercase hidden sm:inline-block">{isPlaying ? 'Pause' : 'Play'}</span>
                 </button>
-                
-                <div className="w-0 overflow-hidden group-hover/volume:w-24 transition-all duration-300 flex items-center">
-                    <input 
-                        type="range" 
-                        min="0" 
-                        max="1" 
-                        step="0.05" 
-                        value={isMuted ? 0 : volume}
-                        onChange={handleVolumeChange}
-                        className="w-20 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-brand-mink"
-                    />
+
+                <div className="h-4 w-px bg-white/10 mx-2"></div>
+
+                <div className="flex items-center gap-3 flex-grow justify-end">
+                    <button onClick={toggleMute} className="hover:text-brand-mink transition-colors text-white focus:outline-none">
+                        {isMuted || volume === 0 ? <VolumeX className="w-5 h-5" /> : volume < 0.5 ? <Volume1 className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                    </button>
+                    
+                    <div className="w-24 flex items-center">
+                        <input 
+                            type="range" 
+                            min="0" 
+                            max="1" 
+                            step="0.05" 
+                            value={isMuted ? 0 : volume}
+                            onChange={handleVolumeChange}
+                            className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-brand-mink"
+                        />
+                    </div>
                 </div>
             </div>
 
-            <div className="h-4 w-px bg-white/20"></div>
-
-            <div className="text-xs font-mono text-white/50 uppercase tracking-widest hidden md:block">
-                Make Golf Brand Video
-            </div>
          </div>
       </div>
     </div>
