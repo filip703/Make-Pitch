@@ -3,16 +3,16 @@ import SlideLayout from './components/SlideLayout';
 import SetupScreen from './components/SetupScreen';
 import { SlideDefinition, SlideContextData } from './types';
 
-// Slide Imports
-import Hero from './components/slides/Hero'; // NEW
+// Slide Imports - Ensure strictly matches filenames for Vercel (Case Sensitive)
+import Hero from './components/slides/Hero';
 import Cover from './components/slides/Cover';
 import Mission from './components/slides/Mission';
 import Problem from './components/slides/Problem';
-import SwingDNA from './components/slides/SwingDNA'; // NEW
+import SwingDNA from './components/slides/SwingDNA';
 import Concept from './components/slides/Concept';
-import MakeDNA from './components/slides/MakeDNA'; // NEW (Refined Solution)
-import Configurator from './components/slides/Configurator'; // NEW
-import SaaS from './components/slides/SaaS'; // NEW
+import MakeDNA from './components/slides/MakeDNA';
+import Configurator from './components/slides/Configurator';
+import SaaS from './components/slides/SaaS';
 import Traction from './components/slides/Traction';
 import Technology from './components/slides/Technology';
 import Product from './components/slides/Product';
@@ -20,6 +20,7 @@ import Market from './components/slides/Market';
 import Business from './components/slides/Business';
 import Financials from './components/slides/Financials';
 import Roadmap from './components/slides/Roadmap';
+import WhyMakeGolf from './components/slides/WhyMakeGolf'; 
 import Team from './components/slides/Team';
 import Ask from './components/slides/Ask';
 import WhyNow from './components/slides/WhyNow';
@@ -43,6 +44,7 @@ const ALL_SLIDES: SlideDefinition[] = [
   { id: 'business', title: 'Business Model', component: Business, defaultChecked: true },
   { id: 'financials', title: 'Financial Highlights', component: Financials, defaultChecked: true },
   { id: 'roadmap', title: 'Roadmap', component: Roadmap, defaultChecked: true },
+  { id: 'whymakegolf', title: 'Competitive Advantage', component: WhyMakeGolf, defaultChecked: true },
   { id: 'team', title: 'The Team', component: Team, defaultChecked: true },
   { id: 'ask', title: 'The Ask', component: Ask, defaultChecked: true }
 ];

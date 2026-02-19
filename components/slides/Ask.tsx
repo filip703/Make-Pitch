@@ -51,3 +51,53 @@ const Ask: React.FC<{ context: SlideContextData }> = ({ context }) => {
          {context.investorName && (
             <div className="mt-10 pt-8 border-t border-white/10">
                 <p className="text-xs font-mono text-brand-polar/40 mb-2 uppercase tracking-widest">Prepared For</p>
+                <p className="text-2xl font-display text-white">{context.investorName}</p>
+            </div>
+         )}
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.3 }}
+        className="bg-brand-surface border border-white/10 p-10 rounded-2xl relative shadow-2xl"
+      >
+         <div className="absolute -top-6 -right-6 w-24 h-24 bg-brand-mink/10 rounded-full blur-2xl"></div>
+         
+         <div className="text-center">
+            <div className="text-sm font-mono text-brand-polar/40 uppercase mb-2">Target Raise</div>
+            <div className="text-6xl font-display font-bold text-white mb-2">{context.askAmount}</div>
+            <div className="text-xs font-mono text-brand-mink uppercase mb-8">Pre-Money: {context.valuation}</div>
+         </div>
+
+         <div className="border-t border-white/10 pt-8 mt-4 grid grid-cols-2 gap-4">
+            <div className="bg-brand-black p-4 rounded border border-white/5">
+               <div className="text-xl font-display text-white mb-1">Team</div>
+               <div className="text-[10px] font-mono text-white/40 uppercase">Full-time ops</div>
+            </div>
+            <div className="bg-brand-black p-4 rounded border border-white/5">
+               <div className="text-xl font-display text-white mb-1">GTM</div>
+               <div className="text-[10px] font-mono text-white/40 uppercase">Marketing & Sales</div>
+            </div>
+            <div className="bg-brand-black p-4 rounded border border-white/5">
+               <div className="text-xl font-display text-white mb-1">Dev</div>
+               <div className="text-[10px] font-mono text-white/40 uppercase">Software & R&D</div>
+            </div>
+            <div className="bg-brand-black p-4 rounded border border-white/5">
+               <div className="text-xl font-display text-white mb-1">IP</div>
+               <div className="text-[10px] font-mono text-white/40 uppercase">Legal & Structure</div>
+            </div>
+         </div>
+
+         <div className="mt-8">
+            <button className="w-full bg-brand-mink text-white font-display font-bold uppercase py-4 rounded hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2">
+               Contact Mårten <ArrowRight className="w-4 h-4" />
+            </button>
+         </div>
+      </motion.div>
+
+    </div>
+  );
+};
+
+export default Ask;
