@@ -24,6 +24,7 @@ import WhyMakeGolf from './components/slides/WhyMakeGolf';
 import Team from './components/slides/Team';
 import Ask from './components/slides/Ask';
 import WhyNow from './components/slides/WhyNow';
+import OutroVideo from './components/slides/OutroVideo';
 
 // Define all available slides
 const ALL_SLIDES: SlideDefinition[] = [
@@ -46,7 +47,8 @@ const ALL_SLIDES: SlideDefinition[] = [
   { id: 'roadmap', title: 'Roadmap', component: Roadmap, defaultChecked: true },
   { id: 'whymakegolf', title: 'Competitive Advantage', component: WhyMakeGolf, defaultChecked: true },
   { id: 'team', title: 'The Team', component: Team, defaultChecked: true },
-  { id: 'ask', title: 'The Ask', component: Ask, defaultChecked: true }
+  { id: 'ask', title: 'The Ask', component: Ask, defaultChecked: true },
+  { id: 'outro', title: 'Brand Video', component: OutroVideo, defaultChecked: true }
 ];
 
 const App: React.FC = () => {

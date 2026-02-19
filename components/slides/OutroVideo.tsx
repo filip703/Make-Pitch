@@ -1,0 +1,118 @@
+import React, { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Play, Pause, Volume2, VolumeX, Maximize } from 'lucide-react';
+
+const OutroVideo: React.FC = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    // Auto-play muted on mount to capture attention, let user unmute
+    if (videoRef.current) {
+        videoRef.current.muted = true;
+        setIsMuted(true);
+        videoRef.current.play().then(() => {
+            setIsPlaying(true);
+        }).catch(err => console.log("Autoplay blocked", err));
+    }
+  }, []);
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      const p = (videoRef.current.currentTime / videoRef.current.duration) * 100;
+      setProgress(p);
+    }
+  };
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!videoRef.current) return;
+    const bounds = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - bounds.left;
+    const width = bounds.width;
+    const percentage = x / width;
+    videoRef.current.currentTime = percentage * videoRef.current.duration;
+  };
+
+  return (
+    <div className="absolute inset-0 w-full h-full bg-black flex items-center justify-center overflow-hidden group">
+      
+      {/* Video Element */}
+      <video
+        ref={videoRef}
+        className="w-full h-full object-cover opacity-90"
+        src="https://clfejcuoqvcoelxjcuax.supabase.co/storage/v1/object/public/Brand%20filer/Video/Make%20brand%20video.mp4"
+        onTimeUpdate={handleTimeUpdate}
+        onEnded={() => setIsPlaying(false)}
+        playsInline
+        click-to-play="true"
+        onClick={togglePlay}
+      />
+
+      {/* Gradient Overlay for controls */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none transition-opacity duration-500 opacity-0 group-hover:opacity-100"></div>
+
+      {/* Centered Play Button (Visible when paused) */}
+      {!isPlaying && (
+        <motion.button
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            onClick={togglePlay}
+            className="absolute z-20 w-24 h-24 bg-brand-mink/90 rounded-full flex items-center justify-center backdrop-blur-sm hover:scale-110 transition-transform cursor-pointer shadow-[0_0_50px_rgba(255,34,76,0.5)]"
+        >
+            <Play className="w-10 h-10 text-white fill-current ml-1" />
+        </motion.button>
+      )}
+
+      {/* Bottom Controls Bar */}
+      <div className="absolute bottom-0 left-0 w-full p-8 z-30 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+         <div className="flex items-center gap-6 max-w-4xl mx-auto bg-[#191919]/80 backdrop-blur-md border border-white/10 p-4 rounded-2xl">
+            
+            <button onClick={togglePlay} className="hover:text-brand-mink transition-colors text-white">
+                {isPlaying ? <Pause className="w-6 h-6 fill-current" /> : <Play className="w-6 h-6 fill-current" />}
+            </button>
+
+            {/* Progress Bar */}
+            <div 
+                className="flex-grow h-2 bg-white/10 rounded-full cursor-pointer relative overflow-hidden group/bar"
+                onClick={handleSeek}
+            >
+                <div className="absolute inset-y-0 left-0 bg-brand-mink w-0 transition-all duration-100" style={{ width: `${progress}%` }}></div>
+                <div className="absolute inset-y-0 left-0 w-full h-full opacity-0 group-hover/bar:opacity-20 bg-white transition-opacity"></div>
+            </div>
+
+            <button onClick={toggleMute} className="hover:text-brand-mink transition-colors text-white">
+                {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+            </button>
+
+            <div className="h-4 w-px bg-white/20"></div>
+
+            <div className="text-xs font-mono text-white/50 uppercase tracking-widest">
+                Make Golf Brand Video
+            </div>
+         </div>
+      </div>
+    </div>
+  );
+};
+
+export default OutroVideo;

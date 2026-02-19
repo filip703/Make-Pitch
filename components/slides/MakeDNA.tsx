@@ -144,17 +144,17 @@ const MakeDNA: React.FC = () => {
               className="w-full h-full flex items-center justify-center overflow-visible"
             >
                 {/* --- DESKTOP FIXED 600x600 FRAME --- */}
-                <div className="hidden lg:block relative w-[600px] h-[600px]">
+                <div className="hidden lg:block relative w-[600px] h-[600px] mx-auto">
                     
                     {/* Static Orbit Rings */}
-                    <div className="absolute inset-0 rounded-full border border-white/5"></div>
-                    <div className="absolute inset-24 rounded-full border border-white/5 border-dashed opacity-30"></div>
+                    <div className="absolute inset-0 rounded-full border border-white/5 z-0"></div>
+                    <div className="absolute inset-24 rounded-full border border-white/5 border-dashed opacity-30 z-0"></div>
                     
                     {/* Animated Data Stream Ring */}
-                    <div className="absolute inset-0 rounded-full border border-transparent border-t-white/10 border-l-white/5 animate-[spin_20s_linear_infinite]"></div>
+                    <div className="absolute inset-0 rounded-full border border-transparent border-t-white/10 border-l-white/5 animate-[spin_20s_linear_infinite] z-0"></div>
 
                     {/* Central Hub - MAKE DNA */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-[#0A0A0A] border border-white/10 flex flex-col items-center justify-center z-10 shadow-2xl relative overflow-hidden group">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-[#0A0A0A] border border-white/10 flex flex-col items-center justify-center z-30 shadow-2xl relative overflow-hidden group">
                         
                         {/* Inner Gradients & Effects */}
                         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/5 to-transparent opacity-40"></div>
@@ -181,7 +181,7 @@ const MakeDNA: React.FC = () => {
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: index * 0.1 }}
-                        className={`absolute ${phase.position} z-20 cursor-pointer group`}
+                        className={`absolute ${phase.position} z-20 hover:z-50 cursor-pointer group`}
                         >
                         {/* Connection Line to Center */}
                         <div className={`absolute -z-10 bg-gradient-to-r from-transparent via-${phase.borderColor.replace('border-', '')} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${phase.line}`}></div>
@@ -228,10 +228,10 @@ const MakeDNA: React.FC = () => {
                     ))}
 
                     {/* Directional Flow Arrows */}
-                    <div className="absolute top-[15%] right-[15%] text-white/5 group-hover:text-white/20 transition-colors"><ArrowRight className="w-8 h-8 rotate-45" /></div>
-                    <div className="absolute bottom-[15%] right-[15%] text-white/5 group-hover:text-white/20 transition-colors"><ArrowRight className="w-8 h-8 rotate-[135deg]" /></div>
-                    <div className="absolute bottom-[15%] left-[15%] text-white/5 group-hover:text-white/20 transition-colors"><ArrowRight className="w-8 h-8 rotate-[225deg]" /></div>
-                    <div className="absolute top-[15%] left-[15%] text-white/5 group-hover:text-white/20 transition-colors"><ArrowRight className="w-8 h-8 rotate-[315deg]" /></div>
+                    <div className="absolute top-[15%] right-[15%] text-white/5 group-hover:text-white/20 transition-colors z-10"><ArrowRight className="w-8 h-8 rotate-45" /></div>
+                    <div className="absolute bottom-[15%] right-[15%] text-white/5 group-hover:text-white/20 transition-colors z-10"><ArrowRight className="w-8 h-8 rotate-[135deg]" /></div>
+                    <div className="absolute bottom-[15%] left-[15%] text-white/5 group-hover:text-white/20 transition-colors z-10"><ArrowRight className="w-8 h-8 rotate-[225deg]" /></div>
+                    <div className="absolute top-[15%] left-[15%] text-white/5 group-hover:text-white/20 transition-colors z-10"><ArrowRight className="w-8 h-8 rotate-[315deg]" /></div>
 
                 </div>
 

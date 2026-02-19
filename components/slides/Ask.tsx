@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Check, ArrowRight } from 'lucide-react';
+import { Check, ArrowRight, Mail } from 'lucide-react';
 import { SlideContextData } from '../../types';
 
 const Ask: React.FC<{ context: SlideContextData }> = ({ context }) => {
@@ -90,9 +90,12 @@ const Ask: React.FC<{ context: SlideContextData }> = ({ context }) => {
          </div>
 
          <div className="mt-8">
-            <button className="w-full bg-brand-mink text-white font-display font-bold uppercase py-4 rounded hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2">
-               Contact Mårten <ArrowRight className="w-4 h-4" />
-            </button>
+            <a 
+               href="mailto:team@make.golf"
+               className="w-full bg-brand-mink text-white font-display font-bold uppercase py-4 rounded hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2 group"
+            >
+               <Mail className="w-4 h-4" /> Contact Team Make <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </a>
          </div>
       </motion.div>
 
