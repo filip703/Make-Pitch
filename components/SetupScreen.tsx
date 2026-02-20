@@ -581,6 +581,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                                     <input 
                                         readOnly
                                         value={generatedLink}
+                                        onClick={(e) => e.currentTarget.select()}
                                         className="w-full bg-black border border-white/10 p-2 text-[10px] rounded text-white/60 font-mono pr-10"
                                     />
                                     <button 

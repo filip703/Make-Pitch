@@ -29,7 +29,14 @@ export const decodeState = (encoded: string): ShareableState | null => {
 
 export const generateShareLink = (context: SlideContextData, slides: string[]): string => {
   const hash = encodeState(context, slides);
-  const url = new URL(window.location.href);
+  
+  let baseUrl = window.location.origin;
+  // If we are not on localhost, force the production URL
+  if (!baseUrl.includes('localhost') && !baseUrl.includes('127.0.0.1')) {
+     baseUrl = 'https://make-pitch.vercel.app';
+  }
+  
+  const url = new URL(baseUrl);
   url.searchParams.set('data', hash);
   return url.toString();
 };
