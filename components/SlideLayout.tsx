@@ -13,6 +13,7 @@ interface SlideLayoutProps {
   investorName?: string;
   partnerLogo?: string | null;
   isPrintMode?: boolean;
+  isInvestorMode?: boolean;
 }
 
 const SlideLayout: React.FC<SlideLayoutProps> = ({ 
@@ -25,7 +26,8 @@ const SlideLayout: React.FC<SlideLayoutProps> = ({
   title,
   investorName,
   partnerLogo,
-  isPrintMode = false
+  isPrintMode = false,
+  isInvestorMode = false
 }) => {
   
   const progress = ((currentSlide + 1) / totalSlides) * 100;
@@ -37,7 +39,7 @@ const SlideLayout: React.FC<SlideLayoutProps> = ({
 
       {/* Top Bar */}
       <header className="absolute top-0 left-0 w-full p-6 z-50 flex justify-between items-center border-b border-white/5 bg-brand-black/50 backdrop-blur-sm">
-        <div className="flex items-center gap-4 cursor-pointer" onClick={!isPrintMode ? exitPresentation : undefined}>
+        <div className="flex items-center gap-4 cursor-pointer" onClick={!isPrintMode && !isInvestorMode ? exitPresentation : undefined}>
           <img 
             src="https://clfejcuoqvcoelxjcuax.supabase.co/storage/v1/object/public/Brand%20filer/Logo/MAKE_ICONxWORDMARK_MINK.png" 
             alt="MAKE GOLF" 
@@ -66,7 +68,7 @@ const SlideLayout: React.FC<SlideLayoutProps> = ({
           <div className="text-xs font-mono text-white/40 hidden md:block">
              {title || 'Confidential'}
           </div>
-          {!isPrintMode && (
+          {!isPrintMode && !isInvestorMode && (
             <button onClick={exitPresentation} className="text-white/20 hover:text-white transition-colors print:hidden">
               <X className="w-5 h-5" />
             </button>

@@ -8,6 +8,8 @@ export interface SlideContextData {
   burnRate: string;
   runway: string;
   contactEmail: string;
+  investorPin?: string;
+  language: 'en' | 'sv';
 }
 
 export interface SlideDefinition {

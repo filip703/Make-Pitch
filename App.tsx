@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import SlideLayout from './components/SlideLayout';
 import SetupScreen from './components/SetupScreen';
+import AuthScreen from './components/AuthScreen';
 import { SlideDefinition, SlideContextData } from './types';
+import { decodeState } from './utils/share';
 
 // Slide Imports - Ensure strictly matches filenames for Vercel (Case Sensitive)
 import Hero from './components/slides/Hero';
@@ -59,7 +61,14 @@ const ALL_SLIDES: SlideDefinition[] = [
   { id: 'outro', title: 'Brand Video', component: OutroVideo, defaultChecked: true }
 ];
 
+const MAKE_PIN = '1245';
+
 const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authMode, setAuthMode] = useState<'make' | 'investor'>('make');
+  const [authError, setAuthError] = useState<string | undefined>();
+  const [pendingInvestorData, setPendingInvestorData] = useState<{context: SlideContextData, slides: string[]} | null>(null);
+
   const [mode, setMode] = useState<'setup' | 'present'>('setup');
   const [selectedSlideIds, setSelectedSlideIds] = useState<string[]>(
     ALL_SLIDES.filter(s => s.defaultChecked).map(s => s.id)
@@ -74,10 +83,56 @@ const App: React.FC = () => {
     askAmount: '3-5 MSEK',
     burnRate: '450k SEK',
     runway: '8 Months',
-    contactEmail: ''
+    contactEmail: '',
+    language: 'en'
   });
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
+  // Check for URL data on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const data = params.get('data');
+    if (data) {
+      const decoded = decodeState(data);
+      if (decoded) {
+        setPendingInvestorData(decoded);
+        setAuthMode('investor');
+      }
+    }
+  }, []);
+
+  const handleUnlock = (pin: string) => {
+    setAuthError(undefined);
+
+    if (authMode === 'make') {
+      if (pin === MAKE_PIN) {
+        setIsAuthenticated(true);
+        setMode('setup');
+      } else {
+        setAuthError('Invalid Admin PIN');
+      }
+    } else {
+      // Investor Mode
+      if (!pendingInvestorData) {
+        setAuthError('No presentation data found.');
+        return;
+      }
+
+      const requiredPin = pendingInvestorData.context.investorPin;
+      
+      if (requiredPin && pin !== requiredPin) {
+        setAuthError('Invalid Access Code');
+        return;
+      }
+
+      // Success - Load data
+      setContextData(pendingInvestorData.context);
+      setSelectedSlideIds(pendingInvestorData.slides);
+      setIsAuthenticated(true);
+      setMode('present'); // Jump straight to presentation
+    }
+  };
 
   // Filter slides based on selection for the presentation
   const activeSlides = ALL_SLIDES.filter(s => selectedSlideIds.includes(s.id));
@@ -115,16 +170,36 @@ const App: React.FC = () => {
       } else if (e.key === 'ArrowLeft') {
         prevSlide();
       } else if (e.key === 'Escape') {
-        setMode('setup');
+        // Only allow escape to setup if we are in MAKE mode (or if we want investors to see the grid?)
+        // The user request implies investors just "see their generated prospect".
+        // Maybe we should disable ESC for investors? 
+        // "om man är investerare och ska kolla på sitt genererade prospect"
+        // Usually investors shouldn't edit.
+        if (authMode === 'make') {
+           setMode('setup');
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [nextSlide, prevSlide, mode]);
+  }, [nextSlide, prevSlide, mode, authMode]);
 
   // Get current slide component
   const CurrentSlideComponent = activeSlides[currentSlideIndex].component;
+
+  if (!isAuthenticated) {
+    return (
+      <AuthScreen 
+        mode={authMode} 
+        setMode={setAuthMode} 
+        onUnlock={handleUnlock} 
+        error={authError}
+        hasInvestorData={!!pendingInvestorData}
+        language={pendingInvestorData?.context.language || 'en'}
+      />
+    );
+  }
 
   return (
     <>
@@ -152,10 +227,13 @@ const App: React.FC = () => {
             totalSlides={activeSlides.length}
             nextSlide={nextSlide}
             prevSlide={prevSlide}
-            exitPresentation={() => setMode('setup')}
+            exitPresentation={() => {
+                if (authMode === 'make') setMode('setup');
+            }}
             title={activeSlides[currentSlideIndex].title}
             investorName={contextData.investorName}
             partnerLogo={contextData.partnerLogo}
+            isInvestorMode={authMode === 'investor'}
           >
             <CurrentSlideComponent context={contextData} />
           </SlideLayout>

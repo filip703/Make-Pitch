@@ -1,91 +1,75 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BarChart3, Settings, Factory, Flag, ArrowRight, Activity, ScanLine, Crosshair, Play, X, ExternalLink } from 'lucide-react';
+import { BarChart3, Settings, Factory, Flag, Activity, ScanLine, Crosshair, Play, X, ExternalLink, Database, Cpu, Zap, Radio } from 'lucide-react';
 
 const MakeDNA: React.FC = () => {
   const [showLiveDemo, setShowLiveDemo] = useState(false);
   const DASHBOARD_URL = "https://frontend-seven-iota-56.vercel.app/dashboard";
 
+  // Configuration for the 4 cardinal points
   const PHASES = [
     {
       id: 'phase-1',
-      label: 'Data',
-      sub: 'ANALYSIS',
-      icon: BarChart3,
+      label: 'DATA',
+      sub: 'INPUT',
+      icon: Database,
       color: 'text-brand-blue',
       borderColor: 'border-brand-blue',
-      glow: 'group-hover:shadow-[0_0_40px_rgba(45,106,255,0.4)]',
-      bg: 'bg-brand-blue/10',
-      position: 'top-0 left-1/2 -translate-x-1/2 -translate-y-1/2', // Top Center
-      line: 'h-32 w-px top-full left-1/2 -translate-x-1/2 bg-gradient-to-b',
-      details: ['Trackman Input', 'Biometric Scan', 'Impact Mapping'],
-      stat: '1.2k pts'
+      shadow: 'shadow-brand-blue/40',
+      pos: 'top-0 left-1/2 -translate-x-1/2', // North
+      detail: 'Swing Biometrics'
     },
     {
       id: 'phase-2',
-      label: 'Design',
-      sub: 'CONFIG',
-      icon: Settings,
+      label: 'DESIGN',
+      sub: 'LOGIC',
+      icon: Cpu,
       color: 'text-brand-mink',
       borderColor: 'border-brand-mink',
-      glow: 'group-hover:shadow-[0_0_40px_rgba(255,34,76,0.4)]',
-      bg: 'bg-brand-mink/10',
-      position: 'top-1/2 right-0 translate-x-1/2 -translate-y-1/2', // Right Center
-      line: 'w-32 h-px right-full top-1/2 -translate-y-1/2 bg-gradient-to-l',
-      details: ['Parametric CAD', 'AI Optimization', 'Variable Face'],
-      stat: 'Generative'
+      shadow: 'shadow-brand-mink/40',
+      pos: 'top-1/2 right-0 -translate-y-1/2', // East
+      detail: 'Generative AI'
     },
     {
       id: 'phase-3',
-      label: 'Build',
-      sub: 'DELIVERY',
+      label: 'BUILD',
+      sub: 'OUTPUT',
       icon: Factory,
       color: 'text-brand-green',
       borderColor: 'border-brand-green',
-      glow: 'group-hover:shadow-[0_0_40px_rgba(29,179,109,0.4)]',
-      bg: 'bg-brand-green/10',
-      position: 'bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2', // Bottom Center
-      line: 'h-32 w-px bottom-full left-1/2 -translate-x-1/2 bg-gradient-to-t',
-      details: ['MoldJet™ Print', '17-4PH Steel', '99.8% Density'],
-      stat: '48 Hours'
+      shadow: 'shadow-brand-green/40',
+      pos: 'bottom-0 left-1/2 -translate-x-1/2', // South
+      detail: '17-4PH Steel'
     },
     {
       id: 'phase-4',
-      label: 'Play',
-      sub: 'TRAINING',
+      label: 'PLAY',
+      sub: 'FEEDBACK',
       icon: Flag,
       color: 'text-brand-amber',
       borderColor: 'border-brand-amber',
-      glow: 'group-hover:shadow-[0_0_40px_rgba(245,166,35,0.4)]',
-      bg: 'bg-brand-amber/10',
-      position: 'top-1/2 left-0 -translate-x-1/2 -translate-y-1/2', // Left Center
-      line: 'w-32 h-px left-full top-1/2 -translate-y-1/2 bg-gradient-to-r',
-      details: ['Arccos Link', 'Smart Caddie', 'Re-Fit Trigger'],
-      stat: 'Live Feed'
+      shadow: 'shadow-brand-amber/40',
+      pos: 'top-1/2 left-0 -translate-y-1/2', // West
+      detail: 'Performance Loop'
     }
   ];
 
   return (
     <div className="w-full h-full flex flex-col relative">
       
-      {/* 1. Eyebrow */}
-      <div className="flex items-center gap-3 mb-2 z-30 pointer-events-auto">
-          <span className="text-brand-mink font-mono text-xs uppercase tracking-widest">THE CORE ENGINE</span>
-          <div className="h-px w-8 bg-brand-mink/30"></div>
-      </div>
-
-      {/* 2. Header Row (Title + Button) */}
-      <div className="w-full flex justify-between items-center z-30 pointer-events-none mb-6">
-        
-        {/* Title */}
+      {/* 1. HEADER */}
+      <div className="w-full flex justify-between items-start z-30 pointer-events-none mb-4 flex-shrink-0">
         <div className="pointer-events-auto">
-           <h2 className="text-5xl md:text-6xl font-display text-white uppercase leading-none tracking-tight">
+           <div className="flex items-center gap-3 mb-2">
+                <span className="text-brand-mink font-mono text-xs uppercase tracking-widest">THE CORE ENGINE</span>
+                <div className="h-px w-8 bg-brand-mink/30"></div>
+           </div>
+           <h2 className="text-4xl md:text-5xl font-display text-white uppercase leading-none tracking-tight">
              The Data Flywheel
            </h2>
         </div>
         
-        {/* Action Button */}
-        <div className="pointer-events-auto pl-8">
+        <div className="pointer-events-auto pl-8 hidden md:block">
             <button 
                onClick={() => setShowLiveDemo(!showLiveDemo)}
                className={`flex items-center gap-3 px-6 py-3 rounded-full border transition-all ${showLiveDemo ? 'bg-white text-black border-white shadow-xl' : 'bg-brand-surface/50 border-brand-mink/30 text-brand-mink hover:bg-brand-mink hover:text-white hover:border-brand-mink backdrop-blur-sm'}`}
@@ -96,38 +80,26 @@ const MakeDNA: React.FC = () => {
                   </>
                ) : (
                   <>
-                    <Play className="w-4 h-4 fill-current" /> <span className="font-display font-bold uppercase text-sm">Launch Live Dashboard</span>
+                    <Play className="w-4 h-4 fill-current" /> <span className="font-display font-bold uppercase text-sm">Launch Dashboard</span>
                   </>
                )}
             </button>
         </div>
       </div>
 
-      {/* 3. Description Subtitle */}
-      <div className="max-w-xl z-30 pointer-events-none mb-8">
-         <p className="text-brand-polar/60 font-mono text-sm leading-relaxed pl-1">
-             It's not a line. It's a loop. Every shot hit with a MAKE club feeds data back into the system, making the next generation smarter.
-         </p>
-      </div>
-
-      {/* 4. Main Visualization Area */}
-      <div className="flex-grow relative flex items-center justify-center mt-8 pb-8">
+      {/* 2. VISUALIZATION AREA */}
+      <div className="flex-grow relative flex items-center justify-center w-full overflow-hidden">
         <AnimatePresence mode="wait">
           
           {showLiveDemo ? (
             /* LIVE IFRAME VIEW */
             <motion.div 
                key="live"
-               initial={{ opacity: 0, scale: 0.95, y: 20 }}
-               animate={{ opacity: 1, scale: 1, y: 0 }}
-               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-               className="absolute inset-0 bg-white rounded-xl overflow-hidden border border-white/20 shadow-2xl z-40"
+               initial={{ opacity: 0, scale: 0.95 }}
+               animate={{ opacity: 1, scale: 1 }}
+               exit={{ opacity: 0, scale: 0.95 }}
+               className="w-full h-full bg-white rounded-xl overflow-hidden border border-white/20 shadow-2xl z-40 relative"
             >
-               <div className="absolute top-4 right-4 z-10">
-                  <a href={DASHBOARD_URL} target="_blank" rel="noopener noreferrer" className="bg-black/10 hover:bg-black/20 text-black p-2 rounded-full backdrop-blur block">
-                     <ExternalLink className="w-4 h-4" />
-                  </a>
-               </div>
                <iframe 
                   src={DASHBOARD_URL}
                   className="w-full h-full border-0"
@@ -135,138 +107,110 @@ const MakeDNA: React.FC = () => {
                />
             </motion.div>
           ) : (
-            /* CIRCULAR LOOP VIEW */
+            /* CIRCULAR ENGINE VIEW */
             <motion.div 
               key="loop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full h-full flex items-center justify-center overflow-visible"
+              className="relative w-full h-full flex items-center justify-center"
             >
-                {/* --- DESKTOP FIXED 600x600 FRAME --- */}
-                <div className="hidden lg:block relative w-[600px] h-[600px] mx-auto">
+                {/* --- THE STAGE: Fixed Aspect Ratio Box (650px) scaled to fit --- */}
+                {/* This ensures perfect geometry regardless of screen aspect ratio */}
+                <div className="relative w-[650px] h-[650px] scale-[0.55] md:scale-[0.7] lg:scale-[0.9] xl:scale-100 flex-shrink-0">
                     
-                    {/* Static Orbit Rings */}
-                    <div className="absolute inset-0 rounded-full border border-white/5 z-0"></div>
-                    <div className="absolute inset-24 rounded-full border border-white/5 border-dashed opacity-30 z-0"></div>
+                    {/* A. Background Rings (Radar Style) */}
+                    <div className="absolute inset-0 rounded-full border border-white/5"></div>
+                    <div className="absolute inset-[15%] rounded-full border border-white/5 border-dashed opacity-50 animate-[spin_120s_linear_infinite]"></div>
+                    <div className="absolute inset-[30%] rounded-full border border-white/5 opacity-30"></div>
                     
-                    {/* Animated Data Stream Ring */}
-                    <div className="absolute inset-0 rounded-full border border-transparent border-t-white/10 border-l-white/5 animate-[spin_20s_linear_infinite] z-0"></div>
+                    {/* B. The Connector Cross (The Spokes) */}
+                    {/* Vertical Line (North-South) */}
+                    <div className="absolute top-0 bottom-0 left-1/2 w-[2px] -translate-x-1/2 bg-gradient-to-b from-brand-blue via-brand-mink to-brand-green opacity-40"></div>
+                    {/* Horizontal Line (West-East) */}
+                    <div className="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2 bg-gradient-to-r from-brand-amber via-brand-mink to-brand-mink opacity-40"></div>
 
-                    {/* Central Hub - MAKE DNA */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-[#0A0A0A] border border-white/10 flex flex-col items-center justify-center z-30 shadow-2xl relative overflow-hidden group">
-                        
-                        {/* Inner Gradients & Effects */}
-                        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/5 to-transparent opacity-40"></div>
-                        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url('https://grainy-gradients.vercel.app/noise.svg')" }}></div>
-                        
-                        {/* Rotating Core Ring */}
-                        <div className="absolute inset-8 rounded-full border border-dashed border-white/10 animate-[spin_30s_linear_infinite]"></div>
-                        
-                        <div className="relative z-20 text-center">
-                        <div className="flex items-center justify-center gap-2 mb-1">
-                            <Activity className="w-4 h-4 text-brand-mink animate-pulse" />
-                            <span className="text-brand-polar/40 font-mono text-[10px] uppercase tracking-widest">CORE SYSTEM</span>
-                        </div>
-                        <h3 className="text-4xl font-display font-bold text-white tracking-tighter mb-1">MAKE DNA</h3>
-                        <div className="h-px w-12 bg-white/20 mx-auto my-2"></div>
-                        <span className="text-white/30 font-mono text-[9px] uppercase tracking-wider">VERSION 2.1.0</span>
-                        </div>
+                    {/* C. The Radar Sweep Animation */}
+                    <div className="absolute inset-0 rounded-full overflow-hidden opacity-10 pointer-events-none">
+                        <div className="absolute top-1/2 left-1/2 w-1/2 h-[2px] bg-white origin-left animate-[spin_4s_linear_infinite] shadow-[0_0_50px_rgba(255,255,255,0.8)]"></div>
                     </div>
 
-                    {/* Phase Nodes */}
-                    {PHASES.map((phase, index) => (
-                        <motion.div
-                        key={phase.id}
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: index * 0.1 }}
-                        className={`absolute ${phase.position} z-20 hover:z-50 cursor-pointer group`}
-                        >
-                        {/* Connection Line to Center */}
-                        <div className={`absolute -z-10 bg-gradient-to-r from-transparent via-${phase.borderColor.replace('border-', '')} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${phase.line}`}></div>
-
-                        {/* The Node Circle */}
-                        <div className={`w-36 h-36 rounded-full bg-[#121212] border border-white/10 hover:border-white/30 transition-all duration-300 relative flex flex-col items-center justify-center ${phase.glow} shadow-2xl`}>
+                    {/* D. Central Hub (The Core) */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 z-20">
+                         <div className="relative w-full h-full rounded-full bg-[#090909] border border-white/10 flex flex-col items-center justify-center shadow-[0_0_100px_rgba(0,0,0,1)] z-20">
+                            {/* Inner Ring */}
+                            <div className="absolute inset-4 rounded-full border-2 border-dashed border-brand-mink/20 animate-[spin_60s_linear_infinite]"></div>
                             
-                            {/* Outer Ring Animation on Hover */}
-                            <div className={`absolute inset-0 rounded-full border-2 ${phase.borderColor} opacity-0 group-hover:opacity-100 transition-all duration-500 scale-110 group-hover:scale-100`}></div>
+                            <Activity className="w-8 h-8 text-brand-mink mb-2 animate-pulse" />
+                            <h3 className="text-5xl font-display font-bold text-white tracking-tighter">DNA</h3>
+                            <div className="text-[10px] font-mono text-brand-polar/40 uppercase tracking-[0.3em] mt-1">Engine v2.0</div>
 
-                            {/* Icon & Label */}
-                            <phase.icon className={`w-8 h-8 ${phase.color} mb-3`} />
-                            <div className={`font-display font-bold text-xl text-white`}>{phase.label}</div>
-                            <div className="text-[10px] font-mono text-white/40 uppercase tracking-widest mt-1">{phase.sub}</div>
-
-                            {/* Stat Badge */}
-                            <div className="absolute -top-3 bg-[#1C1C1E] border border-white/10 px-2 py-0.5 rounded text-[9px] font-mono text-white/60 uppercase tracking-wider">
-                                {phase.stat}
+                            {/* Status Indicators */}
+                            <div className="absolute -bottom-8 flex gap-4">
+                                <div className="flex items-center gap-1">
+                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                                    <span className="text-[9px] font-mono text-white/40">ONLINE</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <div className="w-1.5 h-1.5 bg-brand-blue rounded-full"></div>
+                                    <span className="text-[9px] font-mono text-white/40">SYNC</span>
+                                </div>
                             </div>
-                        </div>
-                        
-                        {/* Tech Details Card (Hover) */}
-                        <div className={`absolute w-48 bg-[#1C1C1E]/95 backdrop-blur border border-white/10 p-4 rounded-lg shadow-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-30
-                            ${index === 0 ? 'top-0 left-full ml-6 -translate-y-1/4' : ''}
-                            ${index === 1 ? 'top-full left-1/2 -translate-x-1/2 mt-6' : ''}
-                            ${index === 2 ? 'bottom-0 right-full mr-6 translate-y-1/4' : ''}
-                            ${index === 3 ? 'bottom-full left-1/2 -translate-x-1/2 mb-6' : ''}
-                        `}>
-                            <div className="flex items-center gap-2 mb-3 border-b border-white/10 pb-2">
-                                <ScanLine className={`w-3 h-3 ${phase.color}`} />
-                                <span className="text-[10px] font-mono text-white/60 uppercase tracking-widest">MODULE SPECS</span>
-                            </div>
-                            <ul className="space-y-2">
-                                {phase.details.map((detail, i) => (
-                                    <li key={i} className="flex items-start gap-2 text-xs text-brand-polar/80">
-                                    <Crosshair className="w-3 h-3 text-white/20 mt-0.5 shrink-0" />
-                                    {detail}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
+                         </div>
+                    </div>
 
-                        </motion.div>
+                    {/* E. The 4 Nodes (Compass Points) */}
+                    {PHASES.map((phase, index) => (
+                        <div key={phase.id} className={`absolute ${phase.pos} z-30 group`}>
+                            {/* Node Container */}
+                            <motion.div 
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ delay: index * 0.1, type: "spring" }}
+                                className={`
+                                    relative w-28 h-28 rounded-full bg-[#111] border border-white/10 
+                                    flex flex-col items-center justify-center cursor-pointer
+                                    hover:border-white/50 hover:scale-110 transition-all duration-300
+                                    shadow-2xl ${phase.shadow}
+                                `}
+                            >
+                                {/* Active Ping Ring */}
+                                <div className={`absolute inset-0 rounded-full border ${phase.borderColor} opacity-0 group-hover:opacity-100 group-hover:animate-ping`}></div>
+                                
+                                <phase.icon className={`w-6 h-6 ${phase.color} mb-1`} />
+                                <div className="text-sm font-bold font-display text-white">{phase.label}</div>
+                                <div className="text-[9px] font-mono text-white/40 uppercase">{phase.sub}</div>
+
+                                {/* Hover Detail Card (Floating) */}
+                                <div className={`
+                                    absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none
+                                    bg-black/90 border border-white/20 p-3 rounded w-40 z-50
+                                    ${index === 0 ? 'bottom-full mb-4' : ''}
+                                    ${index === 1 ? 'left-full ml-4' : ''}
+                                    ${index === 2 ? 'top-full mt-4' : ''}
+                                    ${index === 3 ? 'right-full mr-4' : ''}
+                                `}>
+                                    <div className="flex items-center gap-2 mb-1">
+                                        <ScanLine className="w-3 h-3 text-white/50" />
+                                        <span className="text-[9px] font-mono text-white uppercase">Module</span>
+                                    </div>
+                                    <div className={`text-xs text-white`}>{phase.detail}</div>
+                                </div>
+                            </motion.div>
+                        </div>
                     ))}
 
-                    {/* Directional Flow Arrows */}
-                    <div className="absolute top-[15%] right-[15%] text-white/5 group-hover:text-white/20 transition-colors z-10"><ArrowRight className="w-8 h-8 rotate-45" /></div>
-                    <div className="absolute bottom-[15%] right-[15%] text-white/5 group-hover:text-white/20 transition-colors z-10"><ArrowRight className="w-8 h-8 rotate-[135deg]" /></div>
-                    <div className="absolute bottom-[15%] left-[15%] text-white/5 group-hover:text-white/20 transition-colors z-10"><ArrowRight className="w-8 h-8 rotate-[225deg]" /></div>
-                    <div className="absolute top-[15%] left-[15%] text-white/5 group-hover:text-white/20 transition-colors z-10"><ArrowRight className="w-8 h-8 rotate-[315deg]" /></div>
-
-                </div>
-
-                {/* --- MOBILE LAYOUT: STACKED TIMELINE (Visible < lg) --- */}
-                <div className="lg:hidden w-full px-4 max-w-sm mt-8">
-                    <div className="relative border-l border-white/10 ml-8 space-y-12 py-8">
-                        {PHASES.map((phase, index) => (
-                            <div key={phase.id} className="relative pl-12">
-                                {/* Timeline Node */}
-                                <div className={`absolute -left-6 top-0 w-12 h-12 rounded-full bg-[#1C1C1E] border ${phase.borderColor} flex items-center justify-center z-10 shadow-lg`}>
-                                    <phase.icon className={`w-5 h-5 ${phase.color}`} />
-                                </div>
-                                
-                                {/* Card */}
-                                <div className="bg-[#1C1C1E] border border-white/5 p-5 rounded-lg active:scale-95 transition-transform">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <h3 className={`text-xl font-display font-bold text-white`}>{phase.label}</h3>
-                                        <span className="text-[9px] font-mono bg-white/5 px-2 py-1 rounded text-white/40">{phase.sub}</span>
-                                    </div>
-                                    <ul className="space-y-1 mb-3">
-                                        {phase.details.slice(0, 2).map((d, i) => (
-                                        <li key={i} className="text-xs text-white/60 flex items-center gap-2">
-                                            <div className={`w-1 h-1 rounded-full bg-${phase.borderColor.split('-')[1]}-500`}></div>
-                                            {d}
-                                        </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
                 </div>
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
+
+      {/* 3. MOBILE VIEW (Visible only on very small screens where loop breaks) */}
+      <div className="lg:hidden absolute bottom-4 left-0 w-full text-center">
+         <div className="text-[10px] font-mono text-white/20 uppercase animate-pulse">
+            System Logic Visualization
+         </div>
       </div>
     </div>
   );
