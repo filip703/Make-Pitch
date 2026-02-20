@@ -230,9 +230,18 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
   };
 
   const handleEmailDeck = () => {
+    const link = generateShareLink(contextData, selectedSlides);
+    const pin = contextData.investorPin || 'No PIN set';
+    
     const subject = `Investment Opportunity: Make Golf x ${contextData.investorName || 'Partner'}`;
-    const body = `Hi,\n\nFollowing up on our conversation regarding Make Golf.\n\nAttached is the deck we reviewed.\n\nBest,\nMårten Eker\nCEO, Make Golf`;
-    window.location.href = `mailto:${contextData.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Note: mailto only supports plain text. We format it to look professional.
+    const body = `Hi,\n\nFollowing up on our conversation regarding Make Golf.\n\nWe have prepared a personalized interactive pitch deck for you. You can access it securely via the link below:\n\n${link}\n\nACCESS PIN: ${pin}\n\nBest regards,\nTeam Make\n\n___________________________________\n\nMAKE GOLF\n\nStockholm | Sweden\nwww.makegolf.com\n___________________________________`;
+    
+    // Handle multiple emails (comma or semicolon separated)
+    const emails = contextData.contactEmail.split(/[;,]/).map(e => e.trim()).filter(e => e).join(',');
+    
+    window.location.href = `mailto:${emails}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   const handleGenerateLink = () => {
@@ -492,9 +501,9 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                         <div>
                             <label className="block text-[10px] font-mono uppercase tracking-widest text-white/40 mb-1">{t.contactEmail}</label>
                             <input 
-                                type="email" name="contactEmail" value={contextData.contactEmail} onChange={handleInputChange}
+                                type="text" name="contactEmail" value={contextData.contactEmail} onChange={handleInputChange}
                                 className="w-full bg-transparent border-b border-white/10 py-2 text-sm text-white focus:border-brand-mink focus:outline-none transition-colors"
-                                placeholder="investor@fund.com"
+                                placeholder="investor@fund.com, partner@vc.com"
                             />
                         </div>
                     </div>
