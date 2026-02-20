@@ -76,7 +76,15 @@ const translations = {
       step3Desc: 'When you click "INITIALIZE DECK", the presentation starts in full-screen mode.',
       nextSlide: 'Next Slide',
       exit: 'Exit & Edit',
-      understand: 'I understand, let me build'
+      understand: 'I understand, let me build',
+      step4: 'Step 4: Sharing & Security',
+      step4Desc: 'Share a secure, read-only version of this deck with investors.',
+      step4List: [
+        'Go to the "Share" tab.',
+        'Set a unique PIN code (e.g. 1234) for the investor.',
+        'Generate a secure link and send it to them.',
+        'They will need the PIN to access the deck.'
+      ]
     }
   },
   sv: {
@@ -130,7 +138,15 @@ const translations = {
       step3Desc: 'När du klickar på "INITIALIZE DECK" startar presentationen i fullskärmsläge.',
       nextSlide: 'Nästa Slide',
       exit: 'Avsluta & Redigera',
-      understand: 'Jag förstår, låt mig bygga'
+      understand: 'Jag förstår, låt mig bygga',
+      step4: 'Steg 4: Delning & Säkerhet',
+      step4Desc: 'Dela en säker, skrivskyddad version av detta deck med investerare.',
+      step4List: [
+        'Gå till fliken "Dela".',
+        'Ange en unik PIN-kod (t.ex. 1234) för investeraren.',
+        'Generera en säker länk och skicka den till dem.',
+        'De kommer att behöva PIN-koden för att komma åt decket.'
+      ]
     }
   }
 };
@@ -307,6 +323,20 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
                           <span className="text-[10px] text-white/50">{t.guide.exit}</span>
                        </div>
                     </div>
+                 </div>
+
+                 <div className="h-px bg-white/5 w-full"></div>
+
+                 <div className="space-y-2">
+                    <h4 className="text-brand-amber font-mono text-xs uppercase tracking-widest flex items-center gap-2">
+                       <Share2 className="w-4 h-4" /> {t.guide.step4}
+                    </h4>
+                    <p className="text-brand-polar/80 text-sm leading-relaxed">
+                       {t.guide.step4Desc}
+                    </p>
+                    <ul className="text-xs text-brand-polar/50 list-disc list-inside ml-2 space-y-1">
+                       {t.guide.step4List.map((item, i) => <li key={i}>{item}</li>)}
+                    </ul>
                  </div>
 
               </div>
