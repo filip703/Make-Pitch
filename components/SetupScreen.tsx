@@ -51,6 +51,7 @@ const translations = {
     postMeeting: 'Post-Meeting Actions',
     pdfExport: 'PDF Export',
     emailLink: 'Email Link',
+    copyEmail: 'Copy Email (HTML)',
     initialize: 'Initialize Deck',
     deckArch: 'Deck Architecture',
     slidesActive: 'Slides Active',
@@ -113,6 +114,7 @@ const translations = {
     postMeeting: 'Åtgärder efter möte',
     pdfExport: 'PDF Export',
     emailLink: 'Maila Länk',
+    copyEmail: 'Kopiera Email (HTML)',
     initialize: 'Starta Presentation',
     deckArch: 'Presentationens Arkitektur',
     slidesActive: 'Slides Aktiva',
@@ -242,6 +244,68 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
     const emails = contextData.contactEmail.split(/[;,]/).map(e => e.trim()).filter(e => e).join(',');
     
     window.location.href = `mailto:${emails}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  const handleCopyEmail = async () => {
+    const link = generateShareLink(contextData, selectedSlides);
+    const pin = contextData.investorPin || 'No PIN set';
+    
+    const html = `
+      <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #111; line-height: 1.6;">
+        <p>Hi,</p>
+        <p>Following up on our conversation regarding Make Golf.</p>
+        <p>We have prepared a personalized interactive pitch deck for you. You can access it securely via the link below:</p>
+        <p style="margin: 24px 0;">
+          <a href="${link}" style="background-color: #FF224C; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Open Presentation &rarr;</a>
+        </p>
+        <div style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; display: inline-block; margin-bottom: 24px;">
+           <p style="margin: 0; font-size: 12px; color: #666; font-family: monospace;">
+             <strong>ACCESS PIN:</strong> <span style="font-size: 14px; color: #000; letter-spacing: 2px;">${pin}</span>
+           </p>
+        </div>
+        <p>Best regards,</p>
+        <p><strong>Team Make</strong></p>
+        
+        <table style="margin-top: 32px; border-top: 1px solid #eee; padding-top: 16px;">
+          <tr>
+            <td style="padding-right: 16px; vertical-align: middle;">
+              <img src="https://clfejcuoqvcoelxjcuax.supabase.co/storage/v1/object/public/Brand%20filer/Logo/Make_Icon_256px.png" width="48" height="48" alt="Make Golf" style="border-radius: 4px;">
+            </td>
+            <td style="vertical-align: middle; border-left: 1px solid #eee; padding-left: 16px;">
+              <div style="font-size: 14px; font-weight: bold; color: #111; letter-spacing: 1px;">MAKE GOLF</div>
+              <div style="font-size: 11px; color: #888; margin-top: 4px;">STOCKHOLM | SWEDEN</div>
+              <div style="font-size: 11px; margin-top: 2px;">
+                <a href="https://www.makegolf.com" style="color: #888; text-decoration: none;">www.makegolf.com</a>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    `;
+
+    const text = `Hi,\n\nFollowing up on our conversation regarding Make Golf.\n\nWe have prepared a personalized interactive pitch deck for you. You can access it securely via the link below:\n\n${link}\n\nACCESS PIN: ${pin}\n\nBest regards,\nTeam Make\n\nMAKE GOLF\nStockholm | Sweden\nwww.makegolf.com`;
+
+    try {
+      // @ts-ignore - ClipboardItem is not always in TS types by default
+      const blobHtml = new Blob([html], { type: 'text/html' });
+      const blobText = new Blob([text], { type: 'text/plain' });
+      // @ts-ignore
+      const data = [new ClipboardItem({ 
+          'text/html': blobHtml,
+          'text/plain': blobText 
+      })];
+      await navigator.clipboard.write(data);
+      alert('Email content (with HTML signature) copied to clipboard!');
+    } catch (err) {
+      console.error('Failed to copy email: ', err);
+      // Fallback
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('Email text copied to clipboard (HTML copy not supported).');
+      } catch (e) {
+        alert('Failed to copy to clipboard.');
+      }
+    }
   };
 
   const handleGenerateLink = () => {
@@ -612,12 +676,15 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
             {/* Export Actions */}
             <div className="pt-6 border-t border-white/10 mt-6">
                 <label className="text-[10px] font-mono uppercase text-white/30 mb-3 block">{t.postMeeting}</label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 gap-3">
                     <button onClick={handleExportPDF} className="flex items-center justify-center gap-2 bg-[#222] hover:bg-[#333] border border-white/10 rounded py-3 text-xs font-bold text-white transition-colors">
                         <Download className="w-3 h-3" /> {t.pdfExport}
                     </button>
                     <button onClick={handleEmailDeck} className="flex items-center justify-center gap-2 bg-[#222] hover:bg-[#333] border border-white/10 rounded py-3 text-xs font-bold text-white transition-colors">
                         <Mail className="w-3 h-3" /> {t.emailLink}
+                    </button>
+                    <button onClick={handleCopyEmail} className="flex items-center justify-center gap-2 bg-[#222] hover:bg-[#333] border border-white/10 rounded py-3 text-xs font-bold text-white transition-colors">
+                        <Copy className="w-3 h-3" /> {t.copyEmail}
                     </button>
                 </div>
             </div>
