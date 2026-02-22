@@ -15,7 +15,7 @@ const Technology: React.FC = () => {
           Proprietary Logic.<br/>Industrial Scale.
         </h2>
         <p className="text-brand-polar/70 font-light leading-relaxed mb-8">
-          We own the IP for the configuration engine, but we leverage world-class industrial partners for execution. This keeps us lean and scalable.
+          We own the IP for the configuration engine, but we leverage specialized industrial partners for execution. This keeps us lean and scalable.
         </p>
 
         <div className="space-y-8">
@@ -76,7 +76,7 @@ const Technology: React.FC = () => {
 
         <div className="bg-brand-surface p-6 rounded-xl border border-white/10">
            <div className="text-xs font-mono text-brand-blue mb-2 uppercase">Logic</div>
-           <div className="text-4xl font-display font-bold text-white mb-1">AI-Driven</div>
+           <div className="text-4xl font-display font-bold text-white mb-1">Data-Driven</div>
            <div className="text-xs text-brand-polar/60">Geometry optimized for impact location</div>
         </div>
       </motion.div>

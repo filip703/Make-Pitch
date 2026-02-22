@@ -10,11 +10,15 @@ const Product: React.FC = () => {
         animate={{ opacity: 1, x: 0 }}
         className="w-full md:w-1/2 h-full relative min-h-[400px] md:min-h-auto rounded-xl overflow-hidden border border-white/5"
       >
-        <img 
-          src="https://clfejcuoqvcoelxjcuax.supabase.co/storage/v1/object/public/Brand%20filer/klubbor/iron.jpeg" 
-          alt="Make Golf Iron" 
-          className="absolute inset-0 w-full h-full object-cover grayscale opacity-80 hover:grayscale-0 transition-all duration-1000"
-        />
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover opacity-90"
+        >
+          <source src="https://clfejcuoqvcoelxjcuax.supabase.co/storage/v1/object/public/Brand%20filer/Close_up_macro_photography_of_a_white_golf_ball_sitting_in_de_cf861217-edbd-4f0e-9134-ecdae962d62a_3.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-transparent to-transparent"></div>
         
         {/* Tech Specs Overlay */}

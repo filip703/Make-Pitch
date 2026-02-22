@@ -82,7 +82,7 @@ const Concept: React.FC = () => {
         transition={{ delay: 0.8 }}
         className="text-center mt-12 text-brand-polar/50 font-mono text-xs max-w-2xl mx-auto"
       >
-        We don't guess what you need. We mathematically generate the perfect tool for your biomechanics.
+        We don't guess what you need. We mathematically generate the optimal tool for your biomechanics.
       </motion.p>
     </div>
   );

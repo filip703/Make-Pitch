@@ -45,7 +45,7 @@ const Team: React.FC = () => {
          <div className="relative pl-6 border-l-2 border-brand-mink/30">
             <Quote className="absolute -top-2 -left-3 w-6 h-6 text-brand-mink bg-brand-black p-1" />
             <p className="text-brand-polar/80 text-lg font-light leading-relaxed italic mb-6">
-               "We are tired of the 'good enough' standard in golf. We are a team of players and engineers who believe that if the technology exists to make something perfect, we have a moral obligation to build it."
+               "We are tired of the 'good enough' standard in golf. We are a team of players and engineers who believe that if the technology exists to make something truly optimized, we have a moral obligation to build it."
             </p>
             <div className="text-sm font-mono text-brand-polar/40 uppercase">
                — The Make Manifesto

@@ -86,6 +86,15 @@ const translations = {
         'Generate a secure link and send it to them.',
         'They will need the PIN to access the deck.'
       ]
+    },
+    email: {
+      subject: 'Make Golf Presentation: ',
+      greeting: 'Hi,',
+      intro: 'Following up on our conversation. Here is the interactive pitch deck we discussed.',
+      linkLabel: 'Secure Link:',
+      pinLabel: 'Access PIN:',
+      closing: 'Best regards,',
+      team: 'Make Golf Team'
     }
   },
   sv: {
@@ -149,6 +158,15 @@ const translations = {
         'Generera en säker länk och skicka den till dem.',
         'De kommer att behöva PIN-koden för att komma åt decket.'
       ]
+    },
+    email: {
+      subject: 'Make Golf Presentation: ',
+      greeting: 'Hej,',
+      intro: 'Här är det interaktiva pitch-decket vi diskuterade.',
+      linkLabel: 'Säker länk:',
+      pinLabel: 'Åtkomstkod:',
+      closing: 'Hälsningar,',
+      team: 'Make Golf Team'
     }
   }
 };
@@ -235,10 +253,10 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
     const link = generateShareLink(contextData, selectedSlides);
     const pin = contextData.investorPin || 'No PIN set';
     
-    const subject = `Investment Opportunity: Make Golf x ${contextData.investorName || 'Partner'}`;
+    const subject = `${t.email.subject}${contextData.investorName || 'Partner'}`;
     
     // Note: mailto only supports plain text. We format it to look professional.
-    const body = `Hi,\n\nFollowing up on our conversation regarding Make Golf.\n\nWe have prepared a personalized interactive pitch deck for you. You can access it securely via the link below:\n\n${link}\n\nACCESS PIN: ${pin}\n\nBest regards,\nTeam Make\n\n___________________________________\n\nMAKE GOLF\n\nStockholm | Sweden\nwww.makegolf.com\n___________________________________`;
+    const body = `${t.email.greeting}\n\n${t.email.intro}\n\n${t.email.linkLabel}\n${link}\n\n${t.email.pinLabel} ${pin}\n\n${t.email.closing}\n${t.email.team}\n\n___________________________________\n\nMAKE GOLF\n\nStockholm | Sweden\nwww.makegolf.com\n___________________________________`;
     
     // Handle multiple emails (comma or semicolon separated)
     const emails = contextData.contactEmail.split(/[;,]/).map(e => e.trim()).filter(e => e).join(',');
@@ -252,19 +270,18 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
     
     const html = `
       <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #111; line-height: 1.6;">
-        <p>Hi,</p>
-        <p>Following up on our conversation regarding Make Golf.</p>
-        <p>We have prepared a personalized interactive pitch deck for you. You can access it securely via the link below:</p>
+        <p>${t.email.greeting}</p>
+        <p>${t.email.intro}</p>
         <p style="margin: 24px 0;">
           <a href="${link}" style="background-color: #FF224C; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Open Presentation &rarr;</a>
         </p>
         <div style="background-color: #f5f5f5; padding: 12px; border-radius: 6px; display: inline-block; margin-bottom: 24px;">
            <p style="margin: 0; font-size: 12px; color: #666; font-family: monospace;">
-             <strong>ACCESS PIN:</strong> <span style="font-size: 14px; color: #000; letter-spacing: 2px;">${pin}</span>
+             <strong>${t.email.pinLabel}</strong> <span style="font-size: 14px; color: #000; letter-spacing: 2px;">${pin}</span>
            </p>
         </div>
-        <p>Best regards,</p>
-        <p><strong>Team Make</strong></p>
+        <p>${t.email.closing}</p>
+        <p><strong>${t.email.team}</strong></p>
         
         <table style="margin-top: 32px; border-top: 1px solid #eee; padding-top: 16px;">
           <tr>
@@ -283,7 +300,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({
       </div>
     `;
 
-    const text = `Hi,\n\nFollowing up on our conversation regarding Make Golf.\n\nWe have prepared a personalized interactive pitch deck for you. You can access it securely via the link below:\n\n${link}\n\nACCESS PIN: ${pin}\n\nBest regards,\nTeam Make\n\nMAKE GOLF\nStockholm | Sweden\nwww.makegolf.com`;
+    const text = `${t.email.greeting}\n\n${t.email.intro}\n\n${t.email.linkLabel}\n${link}\n\n${t.email.pinLabel} ${pin}\n\n${t.email.closing}\n${t.email.team}\n\nMAKE GOLF\nStockholm | Sweden\nwww.makegolf.com`;
 
     try {
       // @ts-ignore - ClipboardItem is not always in TS types by default

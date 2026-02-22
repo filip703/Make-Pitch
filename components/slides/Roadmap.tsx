@@ -34,14 +34,14 @@ const Roadmap: React.FC = () => {
         <h2 className="text-4xl md:text-5xl font-display text-white uppercase">18-24 Month Plan</h2>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
         {phases.map((phase, idx) => (
           <motion.div
             key={idx}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.2 }}
-            className={`bg-brand-surface p-8 rounded-xl border-t-4 ${phase.color} h-full flex flex-col`}
+            className={`bg-brand-surface/90 backdrop-blur-sm p-8 rounded-xl border-t-4 ${phase.color} h-full flex flex-col`}
           >
             <div className="flex justify-between items-start mb-6">
               <phase.icon className="w-8 h-8 text-white" />
@@ -60,6 +60,11 @@ const Roadmap: React.FC = () => {
             </ul>
           </motion.div>
         ))}
+      </div>
+
+      <div className="absolute inset-0 z-0 rounded-3xl overflow-hidden opacity-20 pointer-events-none">
+         <img src="https://clfejcuoqvcoelxjcuax.supabase.co/storage/v1/object/public/Brand%20filer/lone_walking_path_cutting_through_a_quiet_golf_landscape_at_d_1f6e71c6-fce3-4218-ace0-d0c402774167_3.png" className="w-full h-full object-cover grayscale" />
+         <div className="absolute inset-0 bg-gradient-to-t from-brand-black via-brand-black/50 to-transparent"></div>
       </div>
     </div>
   );

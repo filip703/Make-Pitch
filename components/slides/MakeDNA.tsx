@@ -28,7 +28,7 @@ const MakeDNA: React.FC = () => {
       borderColor: 'border-brand-mink',
       shadow: 'shadow-brand-mink/40',
       pos: 'top-1/2 right-0 -translate-y-1/2', // East
-      detail: 'Generative AI'
+      detail: 'Parametric Logic'
     },
     {
       id: 'phase-3',

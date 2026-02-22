@@ -15,12 +15,17 @@ const Market: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-brand-surface p-8 rounded-xl border border-white/5 text-center"
+          className="bg-brand-surface p-8 rounded-xl border border-white/5 text-center flex flex-col justify-between"
         >
-          <Users className="w-10 h-10 text-brand-blue mx-auto mb-4" />
-          <div className="text-5xl font-display font-bold text-white mb-2">67M</div>
-          <div className="text-xs font-mono uppercase text-brand-polar/50 mb-4">Golfers Worldwide (2022)</div>
-          <p className="text-sm text-brand-polar/60">Growing to 76.6M by 2027. A 14% increase fueled by younger, tech-savvy players.</p>
+          <div>
+            <Users className="w-10 h-10 text-brand-blue mx-auto mb-4" />
+            <div className="text-5xl font-display font-bold text-white mb-2">67M</div>
+            <div className="text-xs font-mono uppercase text-brand-polar/50 mb-4">Golfers Worldwide (2022)</div>
+            <p className="text-sm text-brand-polar/60">Growing to 76.6M by 2027. A 14% increase fueled by younger, tech-savvy players.</p>
+          </div>
+          <div className="mt-6 h-32 rounded-lg overflow-hidden relative border border-white/10">
+             <img src="https://clfejcuoqvcoelxjcuax.supabase.co/storage/v1/object/public/Brand%20filer/A_diverse_group_of_four_golfers_of_different_genders_and_ethn_aead54af-a1c6-4ee6-b72d-cf9853c7a5f5_1.png" className="absolute inset-0 w-full h-full object-cover opacity-60 grayscale" />
+          </div>
         </motion.div>
 
         <motion.div 
